@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Hamster Kombat — Ultimate</title>
+<style>
+*{box-sizing:border-box}
+:root{--gold:#ffda69;--blue:#5ca8ed;--bg:#172c40;--panel:#304b64}
+body{margin:0;background:var(--bg);color:white;font-family:Arial,sans-serif;user-select:none}
+button{font-family:inherit;cursor:pointer}
+.app{max-width:460px;margin:auto;min-height:100vh;background:linear-gradient(180deg,#29445f,#172b40);padding:14px 14px 100px;overflow:hidden}
+header{display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:18px;font-weight:900;color:var(--gold)}
+.profile{background:#405d78;padding:9px 12px;border-radius:15px;font-size:12px}
+.page{display:none}.page.active{display:block}
+h2{text-align:center;font-size:21px;margin:24px 0 7px}
+.subtitle{text-align:center;color:#b7c8d8;font-size:12px}
+.balance{text-align:center;font-size:38px;font-weight:900;margin:18px 0}
+.balance small{color:var(--gold);font-size:24px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#38546d;padding:12px 4px;border-radius:13px;text-align:center}
+.stat b{display:block;font-size:17px;margin-bottom:5px}
+.stat span{font-size:10px;color:#c0d0df}
+.hamster-area{height:300px;display:flex;justify-content:center;align-items:center;position:relative;touch-action:manipulation}
+.hamster{font-size:175px;filter:drop-shadow(0 12px 13px #0007);cursor:pointer;transition:transform .08s}
+.hamster:active{transform:scale(.91)}
+.coin-float{position:absolute;color:#ffe078;font-size:25px;font-weight:900;pointer-events:none;animation:float .8s forwards;z-index:3}
+@keyframes float{to{transform:translateY(-110px);opacity:0}}
+.energy-head{display:flex;justify-content:space-between;font-size:13px;margin:8px 3px}
+.bar{height:13px;background:#415b72;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:linear-gradient(90deg,#ffd34b,#fff0a2);width:100%;transition:width .2s}
+.panel{background:var(--panel);padding:15px;border-radius:17px;margin-top:13px}
+.panel h3{margin:0 0 12px;font-size:16px}
+.gold{color:var(--gold)}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;display:flex;justify-content:space-around;background:#20384e;border-top:1px solid #536c83;padding:10px 2px calc(10px + env(safe-area-inset-bottom));z-index:10}
+.tabs button{background:none;border:0;color:#b9c9d8;font-size:10px;display:flex;align-items:center;gap:4px;flex-direction:column}
+.tabs button span{font-size:22px}
+.tabs button.active{color:var(--gold)}
+.item{display:flex;align-items:center;gap:11px;background:#405c75;padding:12px;border-radius:14px;margin:9px 0}
+.item .emoji{font-size:34px;width:42px;text-align:center}
+.info{flex:1;min-width:0}
+.info b{display:block;font-size:13px;margin-bottom:5px}
+.info small{color:#c2d1de;font-size:11px;line-height:1.6}
+.buy{background:var(--gold);color:#26394a;border:0;border-radius:10px;padding:10px 11px;font-size:11px;font-weight:900}
+.buy:disabled{opacity:.4}
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.exchange-card{background:#405b74;border-radius:14px;padding:13px 9px;text-align:center;min-height:145px;position:relative}
+.exchange-card .emoji{font-size:35px}
+.exchange-card b{display:block;font-size:12px;margin:6px 0}
+.exchange-card small{font-size:10px;color:#c3d0dd}
+.exchange-card button{margin-top:9px;width:100%}
+.task{background:#405b74;padding:14px;border-radius:14px;margin:10px 0}
+.task p{font-size:12px;color:#c5d2df}
+.task button{margin-top:7px}
+.daily{text-align:center;padding:20px}
+.daily-icon{font-size:70px}
+.reward{font-size:30px;color:var(--gold);font-weight:900}
+.combo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.combo-card{background:#405b74;border:2px solid transparent;border-radius:13px;padding:13px 3px;text-align:center;min-height:110px}
+.combo-card.selected{border-color:var(--gold);background:#526d83}
+.combo-card .emoji{font-size:31px}
+.combo-card small{font-size:10px;display:block;margin-top:7px}
+.combo-card:disabled{opacity:.6}
+.league{text-align:center;background:#405b74;border-radius:18px;padding:20px;margin:15px 0}
+.league .emoji{font-size:70px}
+.league h3{color:var(--gold)}
+.progress{height:10px;background:#263e54;border-radius:15px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:var(--gold)}
+.notice{font-size:11px;color:#b9cbd9;text-align:center;margin-top:10px}
+.mini{font-size:12px;color:#b9cbd9}
+.separator{height:1px;background:#62798d;margin:13px 0}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="logo">🐹 HAMSTER KOMBAT</div>
+<div class="profile">👤 <span id="playerName">Игрок</span></div>
+</header>
+
+<!-- ГЛАВНАЯ -->
+<section id="home" class="page active">
+<h2>Добро пожаловать!</h2>
+<div class="subtitle">Тапай, зарабатывай и прокачивай свою империю</div>
+<div class="balance"><small>🪙</small> <span id="coins">0</span></div>
+<div class="stats">
+<div class="stat"><b id="profit">0</b><span>Прибыль / час</span></div>
+<div class="stat"><b id="power">1</b><span>За тап</span></div>
+<div class="stat"><b id="level">Бронза</b><span>Твоя лига</span></div>
+</div>
+<div class="hamster-area" id="arena">
+<div class="hamster" id="hamster">🐹</div>
+</div>
+<div class="energy-head"><span>⚡ Энергия</span><b><span id="energy">1000</span> / <span id="maxEnergy">1000</span></b></div>
+<div class="bar"><div class="fill" id="energyBar"></div></div>
+<div class="panel">
+<h3>📊 Статистика</h3>
+<div class="mini">Всего тапов: <b id="taps">0</b></div>
+<div class="mini" style="margin-top:8px">Всего заработано: <b id="earned">0</b></div>
+<div class="mini" style="margin-top:8px">Прибыль за всё время: <b id="allProfit">0</b></div>
+</div>
+<div class="panel">
+<h3>🏆 Следующая лига</h3>
+<div id="nextLeague" class="mini"></div>
+<div class="progress"><div id="leagueProgress" style="width:0%"></div></div>
+</div>
+</section>
+
+<!-- УЛУЧШЕНИЯ -->
+<section id="mine" class="page">
+<h2>🚀 Улучшения</h2>
+<div class="subtitle">Прокачивай свои возможности</div>
+<div class="balance"><small>🪙</small> <span id="coins2">0</span></div>
+<div id="upgrades"></div>
+</section>
+
+<!-- БИРЖА -->
+<section id="exchange" class="page">
+<h2>📈 Биржа</h2>
+<div class="subtitle">Покупай карточки и увеличивай пассивный доход</div>
+<div class="panel">
+<h3>🔥 Ежедневное комбо</h3>
+<div class="subtitle">Выбери три карты, которые входят в сегодняшнее комбо</div>
+<div class="separator"></div>
+<div class="combo-grid" id="combo"></div>
+<div class="notice" id="comboStatus">Выбери три правильные карты</div>
+<button class="buy" id="checkCombo" style="width:100%;margin-top:13px">ПРОВЕРИТЬ КОМБО</button>
+<div class="notice">Награда за правильное комбо: 1 000 000 монет</div>
+</div>
+<div class="panel">
+<h3>💳 Карточки улучшений</h3>
+<div class="subtitle">Покупай карточки для увеличения прибыли</div>
+<div class="separator"></div>
+<div class="card-grid" id="exchangeCards"></div>
+</div>
+</section>
+
+<!-- ЗАДАНИЯ -->
+<section id="tasks" class="page">
+<h2>🎯 Задания</h2>
+<div class="subtitle">Выполняй задания и получай награды</div>
+<div class="panel daily">
+<div class="daily-icon">🎁</div>
+<h3>Ежедневная награда</h3>
+<div class="reward">+5 000</div>
+<p class="mini">Забирай монеты каждый день</p>
+<button class="buy" id="dailyBtn">ЗАБРАТЬ</button>
+<div id="dailyStatus" class="notice"></div>
+</div>
+<div class="panel">
+<h3>📋 Список заданий</h3>
+<div id="taskList"></div>
+</div>
+</section>
+
+<!-- ЛИГИ -->
+<section id="league" class="page">
+<h2>🏆 Лиги</h2>
+<div class="subtitle">Поднимайся выше и становись богаче</div>
+<div class="league">
+<div class="emoji" id="leagueEmoji">🥉</div>
+<h3 id="leagueName">Бронзовая лига</h3>
+<div id="leagueCoins">0 монет</div>
+<div class="progress"><div id="leagueBar"></div></div>
+<div class="mini" id="leagueNext"></div>
+</div>
+<div class="panel">
+<h3>🏅 Все лиги</h3>
+<div id="leagueList"></div>
+</div>
+</section>
+
+<nav class="tabs">
+<button class="active" data-page="home"><span>🐹</span>Главная</button>
+<button data-page="mine"><span>🚀</span>Улучшения</button>
+<button data-page="exchange"><span>📈</span>Биржа</button>
+<button data-page="tasks"><span>🎯</span>Задания</button>
+<button data-page="league"><span>🏆</span>Лиги</button>
+</nav>
+</div>
+
+<script>
+const defaults={
+coins:0,energy:1000,maxEnergy:1000,power:1,profit:0,
+taps:0,earned:0,allProfit:0,level:1,
+powerLevel:0,energyLevel:0,profitLevel:0,
+daily:"",comboDate:"",comboSelected:[],comboDone:false,
+cards:{},completed:{},lastTime:Date.now()
+};
+
+let data;
+try{
+data={...defaults,...JSON.parse(localStorage.getItem("hamsterUltimate")||"{}")};
+}catch(e){data={...defaults};}
+
+data.cards=data.cards||{};
+data.completed=data.completed||{};
+data.comboSelected=data.comboSelected||[];
+
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.floor(n).toLocaleString("ru-RU");
+const today=()=>new Date().toLocaleDateString("en-CA");
+const save=()=>localStorage.setItem("hamsterUltimate",JSON.stringify(data));
+
+const upgrades=[
+{id:"power",emoji:"👆",name:"Мощный палец",desc:"Больше монет за каждый тап",base:100,mult:1.65,max:100},
+{id:"energy",emoji:"⚡",name:"Батарейка",desc:"+500 к максимальной энергии",base:300,mult:1.8,max:30},
+{id:"profit",emoji:"💼",name:"Автозаработок",desc:"+100 монет в час",base:500,mult:1.7,max:100}
+];
+
+const cards=[
+{id:"marketing",emoji:"📢",name:"Маркетинг",desc:"Реклама твоей империи",cost:500,income:150},
+{id:"business",emoji:"🏢",name:"Бизнес-центр",desc:"Свой офис",cost:1200,income:350},
+{id:"coin",emoji:"🪙",name:"Монетный двор",desc:"Производство монет",cost:2500,income:700},
+{id:"rocket",emoji:"🚀",name:"Ракета",desc:"Космический бизнес",cost:5000,income:1400},
+{id:"bank",emoji:"🏦",name:"Банк",desc:"Финансовая империя",cost:10000,income:3000},
+{id:"robot",emoji:"🤖",name:"Роботы",desc:"Автоматизация работы",cost:20000,income:6500},
+{id:"factory",emoji:"🏭",name:"Фабрика",desc:"Огромное производство",cost:50000,income:16000},
+{id:"planet",emoji:"🌎",name:"Планета",desc:"Межпланетный бизнес",cost:100000,income:35000}
+];
+
+const comboPool=cards.slice(0,6).map(c=>c.id);
+function dailyCombo(){
+let seed=Number(today().replaceAll("-",""));
+let ids=[...comboPool];
+let result=[];
+for(let i=0;i<3;i++){
+seed=(seed*9301+49297)%233280;
+let index=seed%ids.length;
+result.push(ids.splice(index,1)[0]);
+}
+return result;
+}
+let correctCombo=dailyCombo();
+
+const leagues=[
+{name:"Бронзовая лига",emoji:"🥉",min:0},
+{name:"Серебряная лига",emoji:"🥈",min:10000},
+{name:"Золотая лига",emoji:"🥇",min:50000},
+{name:"Платиновая лига",emoji:"💎",min:150000},
+{name:"Алмазная лига",emoji:"💠",min:500000},
+{name:"Чемпионская лига",emoji:"🏆",min:1500000},
+{name:"Мастер",emoji:"👑",min:5000000}
+];
+
+function currentLeague(){
+let index=0;
+leagues.forEach((l,i)=>{if(data.coins>=l.min)index=i;});
+return index;
+}
+
+function updateLeague(){
+let index=currentLeague();
+let l=leagues[index],next=leagues[index+1];
+$("level").textContent=l.name.split(" ")[0];
+$("leagueEmoji").textContent=l.emoji;
+$("leagueName").textContent=l.name;
+$("leagueCoins").textContent=fmt(data.coins)+" монет";
+let percent=next?Math.min(100,(data.coins-l.min)/(next.min-l.min)*100):100;
+$("leagueBar").style.width=percent+"%";
+$("leagueProgress").style.width=percent+"%";
+$("leagueNext").textContent=next?"До "+next.name+": "+fmt(Math.max(0,next.min-data.coins))+" монет":"Максимальная лига достигнута!";
+$("nextLeague").textContent=next?"До следующей лиги осталось "+fmt(Math.max(0,next.min-data.coins))+" монет":"Ты достиг вершины!";
+$("leagueList").innerHTML=leagues.map((x,i)=>`
+<div class="item">
+<div class="emoji">${x.emoji}</div>
+<div class="info"><b>${x.name}</b><small>От ${fmt(x.min)} монет</small></div>
+${i<=index?"<span class='gold'>✓</span>":"🔒"}
+</div>`).join("");
+}
+
+function renderUpgrades(){
+$("upgrades").innerHTML=upgrades.map(u=>{
+let lvl=data[u.id+"Level"]||0;
+let cost=Math.floor(u.base*Math.pow(u.mult,lvl));
+let disabled=lvl>=u.max||data.coins<cost;
+return `<div class="item">
+<div class="emoji">${u.emoji}</div>
+<div class="info"><b>${u.name}</b><small>${u.desc}</small><br><small>Уровень ${lvl}/${u.max}</small><br><small>Цена: 🪙 ${fmt(cost)}</small></div>
+<button class="buy" onclick="buyUpgrade('${u.id}')" ${disabled?"disabled":""}>Купить</button>
+</div>`;
+}).join("");
+}
+
+function buyUpgrade(id){
+let u=upgrades.find(x=>x.id===id);
+let key=id+"Level",lvl=data[key]||0;
+let cost=Math.floor(u.base*Math.pow(u.mult,lvl));
+if(data.coins<cost||lvl>=u.max)return;
+data.coins-=cost;data[key]++;
+if(id==="power")data.power++;
+if(id==="energy"){data.maxEnergy+=500;data.energy=Math.min(data.maxEnergy,data.energy+500);}
+if(id==="profit")data.profit+=100;
+update();
+}
+
+function renderCards(){
+$("exchangeCards").innerHTML=cards.map(c=>{
+let count=data.cards[c.id]||0;
+let cost=Math.floor(c.cost*Math.pow(1.6,count));
+return `<div class="exchange-card">
+<div class="emoji">${c.emoji}</div>
+<b>${c.name}</b>
+<small>${c.desc}</small>
+<div class="mini">+${fmt(c.income)} / час</div>
+<div class="mini">Уровень ${count}</div>
+<button class="buy" onclick="buyCard('${c.id}')" ${data.coins<cost?"disabled":""}>🪙 ${fmt(cost)}</button>
+</div>`;
+}).join("");
+}
+
+function buyCard(id){
+let c=cards.find(x=>x.id===id);
+let count=data.cards[id]||0;
+let cost=Math.floor(c.cost*Math.pow(1.6,count));
+if(data.coins<cost)return;
+data.coins-=cost;
+data.cards[id]=count+1;
+data.profit+=c.income;
+update();
+}
+
+function renderCombo(){
+if(data.comboDate!==today()){
+data.comboDate=today();
+data.comboSelected=[];
+data.comboDone=false;
+}
+$("combo").innerHTML=cards.slice(0,6).map(c=>{
+let selected=data.comboSelected.includes(c.id);
+return `<button class="combo-card ${selected?"selected":""}" onclick="selectCombo('${c.id}')" ${data.comboDone?"disabled":""}>
+<div class="emoji">${c.emoji}</div><small>${c.name}</small>
+</button>`;
+}).join("");
+$("comboStatus").textContent=data.comboDone?"🎉 Комбо уже выполнено сегодня!":`Выбрано карт: ${data.comboSelected.length}/3`;
+$("checkCombo").disabled=data.comboDone||data.comboSelected.length!==3;
+}
+
+function selectCombo(id){
+if(data.comboDone)return;
+if(data.comboSelected.includes(id)){
+data.comboSelected=data.comboSelected.filter(x=>x!==id);
+}else if(data.comboSelected.length<3){
+data.comboSelected.push(id);
+}
+renderCombo();save();
+}
+
+$("checkCombo").onclick=()=>{
+if(data.comboSelected.length!==3||data.comboDone)return;
+let correct=correctCombo.every(x=>data.comboSelected.includes(x));
+if(correct){
+data.coins+=1000000;
+data.earned+=1000000;
+data.comboDone=true;
+$("comboStatus").textContent="🎉 Поздравляем! Ты выиграл 1 000 000 монет!";
+}else{
+$("comboStatus").textContent="❌ Не угадал! Попробуй выбрать другие карты.";
+data.comboSelected=[];
+}
+update();
+};
+
+const taskDefinitions=[
+{id:"first",emoji:"🪙",name:"Первые монеты",desc:"Заработай 1000 монет",goal:1000,reward:2000,check:()=>data.earned>=1000},
+{id:"taps",emoji:"👆",name:"Мастер тапов",desc:"Сделай 100 нажатий",goal:100,reward:5000,check:()=>data.taps>=100},
+{id:"power",emoji:"💪",name:"Сильный палец",desc:"Улучши силу тапа",goal:1,reward:5000,check:()=>data.powerLevel>=1},
+{id:"business",emoji:"🏢",name:"Бизнесмен",desc:"Купи 3 карточки биржи",goal:3,reward:10000,check:()=>Object.values(data.cards).reduce((a,b)=>a+b,0)>=3},
+{id:"energy",emoji:"⚡",name:"Энергетик",desc:"Улучши энергию",goal:1,reward:5000,check:()=>data.energyLevel>=1},
+{id:"million",emoji:"💰",name:"Миллионер",desc:"Накопи 1 000 000 монет",goal:1000000,reward:50000,check:()=>data.coins>=1000000}
+];
+
+function renderTasks(){
+$("taskList").innerHTML=taskDefinitions.map(t=>{
+let done=data.completed[t.id];
+return `<div class="task">
+<b>${t.emoji} ${t.name}</b>
+<p>${t.desc}</p>
+<button class="buy" onclick="claimTask('${t.id}')" ${done||!t.check()?"disabled":""}>${done?"Выполнено ✓":t.check()?"ЗАБРАТЬ "+fmt(t.reward):"В процессе"}</button>
+</div>`;
+}).join("");
+}
+
+function claimTask(id){
+let t=taskDefinitions.find(x=>x.id===id);
+if(!t||data.completed[id]||!t.check())return;
+data.completed[id]=true;
+data.coins+=t.reward;
+data.earned+=t.reward;
+update();
+}
+
+function dailyUpdate(){
+let claimed=data.daily===today();
+$("dailyBtn").disabled=claimed;
+$("dailyBtn").textContent=claimed?"УЖЕ ПОЛУЧЕНО":"ЗАБРАТЬ";
+$("dailyStatus").textContent=claimed?"Приходи завтра за новой наградой!":"Твоя награда ждёт тебя!";
+}
+$("dailyBtn").onclick=()=>{
+if(data.daily===today())return;
+data.daily=today();
+data.coins+=5000;
+data.earned+=5000;
+update();
+};
+
+function update(){
+$("coins").textContent=fmt(data.coins);
+$("coins2").textContent=fmt(data.coins);
+$("profit").textContent=fmt(data.profit);
+$("power").textContent=fmt(data.power);
+$("energy").textContent=fmt(data.energy);
+$("maxEnergy").textContent=fmt(data.maxEnergy);
+$("energyBar").style.width=(data.energy/data.maxEnergy*100)+"%";
+$("taps").textContent=fmt(data.taps);
+$("earned").textContent=fmt(data.earned);
+$("allProfit").textContent=fmt(data.allProfit);
+renderUpgrades();
+renderCards();
+renderTasks();
+renderCombo();
+dailyUpdate();
+updateLeague();
+save();
+}
+
+$("hamster").addEventListener("pointerdown",e=>{
+if(data.energy<1)return;
+let gain=data.power;
+data.energy--;
+data.coins+=gain;
+data.earned+=gain;
+data.taps++;
+let r=$("arena").getBoundingClientRect();
+let f=document.createElement("div");
+f.className="coin-float";
+f.textContent="+"+fmt(gain);
+f.style.left=(e.clientX-r.left-15)+"px";
+f.style.top=(e.clientY-r.top-10)+"px";
+$("arena").appendChild(f);
+setTimeout(()=>f.remove(),800);
+$("hamster").animate([{transform:"scale(1)"},{transform:"scale(.88)"},{transform:"scale(1)"}],{duration:130});
+update();
+});
+
+document.querySelectorAll(".tabs button").forEach(btn=>{
+btn.onclick=()=>{
+document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+btn.classList.add("active");
+$(btn.dataset.page).classList.add("active");
+};
+});
+
+// Восстановление энергии и дохода за время отсутствия
+let now=Date.now();
+let elapsed=Math.max(0,Math.min(86400000,now-(data.lastTime||now)));
+let seconds=elapsed/1000;
+let offlineCoins=Math.floor(seconds*data.profit/3600);
+data.coins+=offlineCoins;
+data.earned+=offlineCoins;
+data.allProfit+=offlineCoins;
+data.energy=Math.min(data.maxEnergy,data.energy+seconds);
+data.lastTime=now;
+
+setInterval(()=>{
+let income=data.profit/3600;
+data.coins+=income;
+data.allProfit+=income;
+data.energy=Math.min(data.maxEnergy,data.energy+1);
+update();
+},1000);
+
+setInterval(()=>{
+data.lastTime=Date.now();
+save();
+},5000);
+
+update();
+</script>
+</body>
+                                       </html>
