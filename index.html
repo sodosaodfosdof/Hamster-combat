@@ -6,278 +6,198 @@
 <title>Hamster Kombat</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{--bg:#1d1d26;--panel:#292932;--gold:#f5c94e;--muted:#92929f}
-body{margin:0;background:#111;color:#fff;font-family:Arial,sans-serif;user-select:none}
-button{font:inherit;cursor:pointer;border:0;outline:0}
-.app{max-width:460px;min-height:100vh;margin:auto;background:var(--bg);padding:15px 13px 100px;overflow:hidden}
-header{display:flex;justify-content:space-between;align-items:center;margin:8px 4px 20px}
-.profile{display:flex;align-items:center;gap:9px}
-.avatar{width:48px;height:48px;border-radius:13px;background:#34343d;display:grid;place-items:center;font-size:29px}
-.profile small{font-size:11px;color:#aaa;display:block;margin-bottom:4px}
+body{margin:0;background:#171720;color:white;font-family:Arial,sans-serif;user-select:none}
+button{border:0;cursor:pointer;font:inherit}
+.app{max-width:460px;min-height:100vh;margin:auto;background:#20202a;padding:12px 12px 100px;overflow:hidden}
+header{display:flex;justify-content:space-between;align-items:center;margin:7px 3px 18px}
+.profile{display:flex;align-items:center;gap:10px}
+.avatar{width:45px;height:45px;background:#353541;border-radius:14px;display:grid;place-items:center;font-size:27px}
+.profile small{display:block;color:#aaa;font-size:11px;margin-bottom:4px}
 .profile b{font-size:14px}
-.binance{background:#30303a;padding:12px;border-radius:17px;display:flex;align-items:center;gap:7px;font-weight:bold;font-size:14px}
-.binance span{font-size:24px;color:#f3c546}
-.page{display:none}
-.page.active{display:block}
-.top-frame{border:2px solid #e4bd50;border-radius:35px;padding:17px 12px 15px;box-shadow:0 0 18px #d4a82a1c}
+.binance{background:#33333e;color:white;border-radius:14px;padding:11px;font-weight:bold}
+.binance span{color:#f4c747;font-size:21px}
+.page{display:none}.page.active{display:block}
+.frame{border:2px solid #d9b447;border-radius:30px;padding:14px 10px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.stat{background:#292932;border-radius:17px;text-align:center;padding:12px 3px;min-width:0}
-.stat small{display:block;font-size:11px;color:#c4a08e;margin-bottom:6px}
-.stat:nth-child(2) small{color:#a79cdb}
-.stat:nth-child(3) small{color:#a6d5a3}
-.stat b{font-size:16px}
-.stat .coin{color:var(--gold)}
-.balance{text-align:center;margin:24px 0 16px;display:flex;align-items:center;justify-content:center;gap:10px}
-.coin-big{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff29a,#f6ce3d 55%,#c98c12);border:5px solid #d8a72a;display:grid;place-items:center;color:#fff4b4;font-size:48px;font-weight:900;text-shadow:0 3px 3px #a66d12;box-shadow:0 4px 12px #0005}
-.balance strong{font-size:clamp(27px,8vw,43px);letter-spacing:-1px}
-.level-head{display:flex;justify-content:space-between;font-size:14px;margin:7px 4px 10px}
-.level-head b:last-child{color:#aaa}
-.level-bar{height:19px;background:#34343e;border-radius:20px;padding:2px;overflow:hidden}
-.level-fill{height:100%;width:0;border-radius:20px;background:linear-gradient(90deg,#7df3a3,#d86afa,#615aff);transition:width .3s}
-.hamster-area{height:470px;display:flex;justify-content:center;align-items:center;position:relative;touch-action:manipulation}
-.hamster-circle{width: min(78vw,340px);height:min(78vw,340px);max-width:340px;max-height:340px;border-radius:50%;background:radial-gradient(circle at 48% 43%,#344a78,#26334e 60%,#202636);border:8px solid #333d79;box-shadow:0 0 0 3px #171c36,0 0 25px #5056c7a0,inset 0 0 25px #0008;display:grid;place-items:center;cursor:pointer;touch-action:manipulation;transition:transform .08s}
-.hamster-circle:active{transform:scale(.97)}
-.hamster-svg{width:83%;height:90%;filter:drop-shadow(0 8px 9px #0008);pointer-events:none}
-.coin-float{position:absolute;color:#ffdc53;font-weight:900;font-size:25px;pointer-events:none;animation:float .8s forwards;z-index:4;text-shadow:0 2px 5px #000}
-@keyframes float{to{transform:translateY(-110px);opacity:0}}
-.bottom-energy{display:flex;justify-content:space-between;align-items:center;padding:0 9px;margin:0 0 8px}
-.energy-label{display:flex;align-items:center;gap:8px;font-weight:bold;font-size:19px}
-.energy-label span{font-size:28px}
-.boost{background:none;color:#fff;display:flex;align-items:center;gap:9px;font-size:16px;font-weight:bold}
-.boost span{font-size:29px}
-.energy-bar{height:7px;background:#34343e;border-radius:20px;overflow:hidden;margin:0 9px 14px}
-.energy-fill{height:100%;width:100%;background:#f7c74b;border-radius:20px}
-.video-text{text-align:center;font-size:25px;font-weight:bold;color:#ffe44f;text-shadow:2px 3px 3px #000;margin:20px 0}
-.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:#292932;border:1px solid #363640;border-radius:23px 23px 0 0;padding:8px 5px calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(5,1fr);z-index:10}
-.tabs button{background:none;color:#777782;display:flex;flex-direction:column;align-items:center;gap:5px;font-size:10px;padding:4px 0}
-.tabs button span{font-size:25px}
-.tabs button.active{color:#f5c94e;background:#1d1d26;border-radius:14px}
-.tabs button.active span{filter:drop-shadow(0 0 5px #e8ba43)}
-.section-title{font-size:21px;font-weight:bold;margin:18px 3px}
-.panel{background:#292932;border-radius:18px;padding:15px;margin:12px 0}
-.panel h3{font-size:16px;margin:0 0 12px}
+.stat{background:#30303b;border-radius:15px;padding:12px 2px;text-align:center}
+.stat small{display:block;font-size:10px;color:#c8b5a0;margin-bottom:7px}
+.stat b{font-size:14px}
+.balance{display:flex;justify-content:center;align-items:center;gap:10px;margin:23px 0}
+.coin{width:68px;height:68px;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff5a2,#f6cf4b 55%,#bd8318);border:5px solid #d6a42d;display:grid;place-items:center;font-size:43px;font-weight:bold;color:#fff5be;text-shadow:0 3px 4px #8b5a0b}
+.balance strong{font-size:clamp(27px,8vw,42px)}
+.level{display:flex;justify-content:space-between;margin:8px 4px;font-size:13px}
+.level span:last-child{color:#aaa}
+.bar{height:16px;background:#3a3947;border-radius:20px;padding:2px;overflow:hidden}
+.bar div{height:100%;width:0;background:linear-gradient(90deg,#6af2a4,#d66bff,#655cff);border-radius:20px}
+.arena{height:435px;display:flex;align-items:center;justify-content:center;position:relative}
+.hamster{width:min(78vw,330px);height:min(78vw,330px);border-radius:50%;background:radial-gradient(circle at 50% 40%,#415985,#263451 65%,#171e31);border:8px solid #343d79;box-shadow:0 0 0 3px #16182f,0 0 28px #5359c7aa,inset 0 0 25px #0009;display:grid;place-items:center;touch-action:manipulation;transition:transform .08s}
+.hamster:active{transform:scale(.96)}
+.hamster svg{width:90%;height:95%;pointer-events:none;filter:drop-shadow(0 8px 8px #0008)}
+.float{position:absolute;color:#ffdb4f;font-size:26px;font-weight:900;pointer-events:none;animation:up .8s forwards;text-shadow:0 2px 5px #000}
+@keyframes up{to{transform:translateY(-110px);opacity:0}}
+.energy{display:flex;justify-content:space-between;align-items:center;padding:0 8px;margin-bottom:9px}
+.energy b{font-size:19px}
+.energy button{background:none;color:white;font-weight:bold;font-size:16px}
+.energybar{height:7px;background:#3b3b46;border-radius:20px;margin:0 8px 12px;overflow:hidden}
+.energybar div{height:100%;background:#f4c94e;width:100%}
+.logo{text-align:center;color:#f7d44f;font-size:23px;font-weight:bold;margin:20px 0}
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:#30303b;border-radius:22px 22px 0 0;padding:8px 3px calc(9px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(6,1fr);z-index:5}
+.tabs button{background:none;color:#898995;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:5px;padding:5px 0}
+.tabs button span{font-size:22px}
+.tabs button.active{color:#f4ce54;background:#20202a;border-radius:12px}
+.heading{font-size:22px;font-weight:bold;margin:18px 3px}
+.panel{background:#30303b;border-radius:17px;padding:15px;margin:11px 0}
 .muted{font-size:12px;color:#aaa}
-.item{display:flex;align-items:center;gap:11px;padding:13px;background:#30303a;border-radius:15px;margin:9px 0}
-.item-icon{font-size:34px;width:40px;text-align:center}
+.item{display:flex;align-items:center;gap:10px;background:#30303b;padding:12px;border-radius:14px;margin:9px 0}
+.itemicon{font-size:31px}
 .info{flex:1;min-width:0}
-.info b{font-size:13px;display:block;margin-bottom:6px}
+.info b{font-size:13px;display:block;margin-bottom:5px}
 .info small{font-size:11px;color:#aaa;line-height:1.7}
-.buy{background:linear-gradient(135deg,#ffe17b,#dcae38);color:#29251b;border-radius:11px;padding:11px;font-weight:bold;font-size:11px}
+.buy{background:linear-gradient(135deg,#ffe48b,#dcae3c);color:#302719;border-radius:10px;padding:11px;font-size:11px;font-weight:bold}
 .buy:disabled{opacity:.35}
-.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.card{background:#30303a;border-radius:15px;text-align:center;padding:14px 7px}
-.card .emoji{font-size:34px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.card{background:#30303b;border-radius:15px;text-align:center;padding:13px 7px}
+.card .emoji{font-size:33px}
 .card b{display:block;font-size:12px;margin:8px 0}
-.card small{font-size:10px;color:#aaa}
+.card small{color:#aaa;font-size:10px}
 .card button{width:100%;margin-top:10px}
-.combo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.combo-card{background:#34343e;color:white;border:2px solid transparent;border-radius:13px;padding:12px 3px}
-.combo-card.selected{border-color:#f5c94e}
-.combo-card .emoji{font-size:28px}
-.combo-card small{display:block;margin-top:6px;font-size:10px}
-.task{background:#30303a;border-radius:15px;padding:14px;margin:10px 0}
+.combo{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.combo button{background:#3b3b47;color:white;border:2px solid transparent;border-radius:12px;padding:10px 2px}
+.combo button.selected{border-color:#f5cf55}
+.combo button span{display:block;font-size:27px}
+.combo button small{font-size:10px}
+.task{background:#30303b;padding:13px;border-radius:14px;margin:9px 0}
 .task p{font-size:12px;color:#aaa}
-.reward{text-align:center;color:#f5cd57;font-size:30px;font-weight:bold;margin:15px}
-.league-card{text-align:center;background:#30303a;padding:20px;border-radius:18px}
-.league-card .emoji{font-size:65px}
-.progress{height:9px;background:#444;border-radius:20px;overflow:hidden;margin:13px 0}
-.progress div{height:100%;background:linear-gradient(90deg,#8df1a4,#c36aff,#625dff)}
-.notice{text-align:center;font-size:11px;color:#aaa;margin:10px}
+.reward{font-size:29px;color:#f5cf55;text-align:center;margin:15px}
 </style>
 </head>
 <body>
 <div class="app">
-
 <header>
-<div class="profile">
-<div class="avatar">🐹</div>
-<div><small>ИГРОК</small><b>Д (CEO)</b></div>
-</div>
-<button class="binance" onclick="alert('Биржа Binance — демонстрационный раздел')"><span>◆</span> Binance</button>
+<div class="profile"><div class="avatar">🐹</div><div><small>ИГРОК</small><b>Д (CEO)</b></div></div>
+<button class="binance"><span>◆</span> Binance</button>
 </header>
 
-<!-- ГЛАВНЫЙ ЭКРАН -->
 <section id="home" class="page active">
-<div class="top-frame">
-
+<div class="frame">
 <div class="stats">
-<div class="stat">
-<small>Прибыль за тап</small>
-<b>🪙 +<span id="tapStat">1</span></b>
+<div class="stat"><small>Прибыль за тап</small><b>🪙 +<span id="power">1</span></b></div>
+<div class="stat"><small>Монет для апа</small><b id="upgradeCost">100</b></div>
+<div class="stat"><small>Прибыль в час</small><b>🪙 +<span id="profit">0</span></b></div>
 </div>
-<div class="stat">
-<small>Монет для апа</small>
-<b id="upgradeStat">0</b>
-</div>
-<div class="stat">
-<small>Прибыль в час</small>
-<b>🪙 +<span id="profitStat">0</span></b>
-</div>
-</div>
+<div class="balance"><div class="coin">$</div><strong id="coins">0</strong></div>
+<div class="level"><b id="league">Bronze ›</b><span>Level <b id="level">1</b>/10</span></div>
+<div class="bar"><div id="levelbar"></div></div>
 
-<div class="balance">
-<div class="coin-big">$</div>
-<strong id="coins">0</strong>
-</div>
-
-<div class="level-head">
-<b id="leagueName">Bronze ›</b>
-<b>Level <span id="level">1</span>/10</b>
-</div>
-<div class="level-bar"><div class="level-fill" id="levelFill"></div></div>
-
-<div class="hamster-area" id="arena">
-<div class="hamster-circle" id="tapButton">
-
-<!-- ХОМЯК В КОСТЮМЕ -->
-<svg class="hamster-svg" viewBox="0 0 300 390" xmlns="http://www.w3.org/2000/svg">
+<div class="arena" id="arena">
+<div class="hamster" id="tap">
+<svg viewBox="0 0 300 390" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<radialGradient id="fur" cx="40%" cy="30%">
-<stop stop-color="#ffce89"/>
-<stop offset=".65" stop-color="#d98743"/>
-<stop offset="1" stop-color="#a94f28"/>
-</radialGradient>
-<linearGradient id="suit" x2="0" y2="1">
-<stop stop-color="#3272bd"/>
-<stop offset="1" stop-color="#102b61"/>
-</linearGradient>
-<radialGradient id="cheek">
-<stop stop-color="#fff1d9"/>
-<stop offset="1" stop-color="#e8b88d"/>
-</radialGradient>
+<radialGradient id="fur"><stop stop-color="#ffd69b"/><stop offset=".65" stop-color="#d88d4c"/><stop offset="1" stop-color="#a85a30"/></radialGradient>
+<linearGradient id="suit" x2="0" y2="1"><stop stop-color="#397cc6"/><stop offset="1" stop-color="#102b60"/></linearGradient>
+<radialGradient id="face"><stop stop-color="#fff0d9"/><stop offset="1" stop-color="#e6b78d"/></radialGradient>
 </defs>
-
-<!-- Уши -->
-<ellipse cx="84" cy="84" rx="35" ry="49" fill="#b96637" transform="rotate(-22 84 84)"/>
-<ellipse cx="84" cy="85" rx="21" ry="33" fill="#f3ad9a" transform="rotate(-22 84 85)"/>
-<ellipse cx="216" cy="84" rx="35" ry="49" fill="#b96637" transform="rotate(22 216 84)"/>
-<ellipse cx="216" cy="85" rx="21" ry="33" fill="#f3ad9a" transform="rotate(22 216 85)"/>
-
-<!-- Голова -->
-<ellipse cx="150" cy="139" rx="93" ry="105" fill="url(#fur)"/>
-<ellipse cx="150" cy="172" rx="78" ry="57" fill="url(#cheek)"/>
-<ellipse cx="101" cy="168" rx="34" ry="30" fill="#f5e0c9"/>
-<ellipse cx="199" cy="168" rx="34" ry="30" fill="#f5e0c9"/>
-
-<!-- Глаза -->
-<ellipse cx="112" cy="125" rx="16" ry="22" fill="#38231d"/>
-<ellipse cx="188" cy="125" rx="16" ry="22" fill="#38231d"/>
-<ellipse cx="117" cy="117" rx="5" ry="7" fill="white"/>
-<ellipse cx="193" cy="117" rx="5" ry="7" fill="white"/>
-<path d="M93 97 Q112 82 130 99" fill="none" stroke="#8c4527" stroke-width="8" stroke-linecap="round"/>
-<path d="M170 99 Q188 82 207 97" fill="none" stroke="#8c4527" stroke-width="8" stroke-linecap="round"/>
-
-<!-- Нос и рот -->
-<ellipse cx="150" cy="165" rx="14" ry="10" fill="#a65b53"/>
-<path d="M150 174 Q134 190 121 179 M150 174 Q166 190 179 179" fill="none" stroke="#805044" stroke-width="4" stroke-linecap="round"/>
-<ellipse cx="150" cy="184" rx="6" ry="4" fill="#d18b7b"/>
-
-<!-- Тело -->
-<path d="M85 233 Q80 215 103 213 L197 213 Q220 215 215 233 L236 340 Q220 363 150 363 Q80 363 64 340Z" fill="url(#suit)"/>
-<path d="M103 213 L150 240 L197 213 L184 281 L150 296 L116 281Z" fill="#e8edf5"/>
-<path d="M140 230 L160 230 L154 253 L166 300 L150 317 L134 300 L146 253Z" fill="#2384cf"/>
-<path d="M144 233 L156 233 L151 249 L160 299 L150 308 L140 299 L149 249Z" fill="#73c4ff"/>
-
-<!-- Руки -->
-<path d="M91 236 Q58 233 62 268 L115 305 Q133 312 147 290 L136 275 L103 256Z" fill="#d88948"/>
-<path d="M209 236 Q242 233 238 268 L185 305 Q167 312 153 290 L164 275 L197 256Z" fill="#d88948"/>
-<path d="M78 272 Q113 287 143 281" stroke="#f2b16b" stroke-width="15" stroke-linecap="round" fill="none"/>
-<path d="M222 272 Q187 287 157 281" stroke="#f2b16b" stroke-width="15" stroke-linecap="round" fill="none"/>
-
-<!-- Лапы -->
-<ellipse cx="111" cy="360" rx="29" ry="12" fill="#b66a3c"/>
-<ellipse cx="189" cy="360" rx="29" ry="12" fill="#b66a3c"/>
+<!-- ears -->
+<ellipse cx="80" cy="88" rx="36" ry="49" fill="#a95e36" transform="rotate(-20 80 88)"/>
+<ellipse cx="80" cy="88" rx="21" ry="32" fill="#f0a6a0"/>
+<ellipse cx="220" cy="88" rx="36" ry="49" fill="#a95e36" transform="rotate(20 220 88)"/>
+<ellipse cx="220" cy="88" rx="21" ry="32" fill="#f0a6a0"/>
+<!-- head -->
+<ellipse cx="150" cy="143" rx="94" ry="105" fill="url(#fur)"/>
+<ellipse cx="150" cy="174" rx="78" ry="58" fill="url(#face)"/>
+<ellipse cx="103" cy="169" rx="33" ry="30" fill="#f7e4ce"/>
+<ellipse cx="197" cy="169" rx="33" ry="30" fill="#f7e4ce"/>
+<!-- eyes -->
+<ellipse cx="113" cy="127" rx="15" ry="21" fill="#34221c"/>
+<ellipse cx="187" cy="127" rx="15" ry="21" fill="#34221c"/>
+<circle cx="118" cy="119" r="5" fill="white"/>
+<circle cx="192" cy="119" r="5" fill="white"/>
+<path d="M95 98 Q112 84 130 98 M170 98 Q188 84 205 98" fill="none" stroke="#87452a" stroke-width="8" stroke-linecap="round"/>
+<!-- nose -->
+<ellipse cx="150" cy="167" rx="13" ry="9" fill="#a95d58"/>
+<path d="M150 176 Q132 194 120 180 M150 176 Q168 194 180 180" fill="none" stroke="#805044" stroke-width="4" stroke-linecap="round"/>
+<!-- body suit -->
+<path d="M91 232 Q82 215 108 211 L192 211 Q218 215 209 232 L238 345 Q150 380 62 345Z" fill="url(#suit)"/>
+<path d="M108 211 L150 242 L192 211 L181 280 L150 299 L119 280Z" fill="#f1f1f2"/>
+<path d="M140 231 L160 231 L154 253 L166 300 L150 318 L134 300 L146 253Z" fill="#3288cf"/>
+<!-- arms -->
+<path d="M94 239 Q62 229 61 270 L119 306 Q135 311 148 286 L132 271 L102 255Z" fill="#d88b4c"/>
+<path d="M206 239 Q238 229 239 270 L181 306 Q165 311 152 286 L168 271 L198 255Z" fill="#d88b4c"/>
+<path d="M78 272 Q112 291 143 280 M222 272 Q188 291 157 280" fill="none" stroke="#f4bd7d" stroke-width="13" stroke-linecap="round"/>
+<ellipse cx="111" cy="359" rx="29" ry="12" fill="#b76a3c"/>
+<ellipse cx="189" cy="359" rx="29" ry="12" fill="#b76a3c"/>
 </svg>
 </div>
 </div>
 
-<div class="bottom-energy">
-<div class="energy-label"><span>⚡</span><b><span id="energy">1000</span> / <span id="maxEnergy">1000</span></b></div>
-<button class="boost" onclick="showBoost()"><span>🚀</span> Boost</button>
+<div class="energy"><b>⚡ <span id="energy">1000</span> / <span id="maxEnergy">1000</span></b><button onclick="boost()">🚀 Boost</button></div>
+<div class="energybar"><div id="energybar"></div></div>
 </div>
-<div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
-</div>
-<div class="video-text">HAMSTER KOMBAT</div>
+<div class="logo">HAMSTER KOMBAT</div>
 </section>
 
-<!-- MINE -->
 <section id="mine" class="page">
-<div class="section-title">⛏️ Mine</div>
-<div class="panel">
-<h3>Улучшения хомяка</h3>
-<div class="muted">Прокачивай доход и силу нажатий</div>
-</div>
+<div class="heading">⛏️ Mine</div>
+<div class="panel"><b>Улучшения хомяка</b><p class="muted">Прокачивай свой бизнес</p></div>
 <div id="upgrades"></div>
 </section>
 
-<!-- EXCHANGE -->
 <section id="exchange" class="page">
-<div class="section-title">💱 Exchange</div>
+<div class="heading">💱 Exchange</div>
 <div class="panel">
-<h3>🔥 Daily Combo</h3>
-<div class="muted">Выбери три карточки для комбо</div>
-<div style="height:14px"></div>
-<div class="combo-grid" id="combo"></div>
-<div class="notice" id="comboStatus"></div>
+<b>🔥 Daily Combo</b>
+<p class="muted">Выбери три карточки</p>
+<div class="combo" id="combo"></div>
+<p class="muted" id="comboStatus"></p>
 <button class="buy" id="checkCombo" style="width:100%">Проверить комбо</button>
-<div class="notice">Награда: 1 000 000 монет</div>
 </div>
-<div class="section-title">Карточки</div>
-<div class="card-grid" id="exchangeCards"></div>
+<div class="heading">Карточки</div>
+<div class="cards" id="cards"></div>
 </section>
 
-<!-- FRIENDS -->
 <section id="friends" class="page">
-<div class="section-title">👥 Friends</div>
-<div class="panel">
-<h3>Приглашай друзей!</h3>
-<div style="font-size:55px;text-align:center;margin:15px">👨‍👩‍👧‍👦</div>
-<p class="muted">Приглашай друзей в свою команду и получай бонусные монеты.</p>
+<div class="heading">👥 Friends</div>
+<div class="panel" style="text-align:center">
+<div style="font-size:60px">👨‍👦</div>
+<h3>Пригласи одного друга!</h3>
+<p class="muted">Бонус за приглашение — 25 000 монет</p>
 <div class="reward">+25 000 🪙</div>
-<button class="buy" style="width:100%" onclick="invite()">ПРИГЛАСИТЬ ДРУГА</button>
-</div>
-<div class="panel">
-<h3>Твоя команда</h3>
-<div class="muted">Приглашённых друзей: <b id="friendCount">0</b></div>
+<button class="buy" id="inviteBtn" onclick="invite()" style="width:100%">ПРИГЛАСИТЬ ДРУГА</button>
+<p class="muted" id="inviteStatus">Приглашений: 0/1</p>
 </div>
 </section>
 
-<!-- EARN -->
 <section id="earn" class="page">
-<div class="section-title">🎯 Earn</div>
-<div class="panel daily">
-<div style="font-size:65px">🎁</div>
+<div class="heading">🎯 Earn</div>
+<div class="panel" style="text-align:center">
+<div style="font-size:60px">🎁</div>
 <h3>Ежедневная награда</h3>
 <div class="reward">+5 000</div>
-<button class="buy" id="dailyBtn">ЗАБРАТЬ</button>
-<div class="notice" id="dailyStatus"></div>
+<button class="buy" id="dailyBtn" onclick="daily()">ЗАБРАТЬ</button>
+<p class="muted" id="dailyStatus"></p>
 </div>
-<div class="section-title">Задания</div>
+<div class="heading">Задания</div>
 <div id="tasks"></div>
 </section>
 
-<!-- AIRDROP -->
 <section id="airdrop" class="page">
-<div class="section-title">🪂 Airdrop</div>
-<div class="panel daily">
-<div style="font-size:70px">🪙</div>
+<div class="heading">🪂 Airdrop</div>
+<div class="panel" style="text-align:center">
+<div style="font-size:65px">🪙</div>
 <h3>Твой Airdrop</h3>
-<div class="reward" id="airdropBalance">0</div>
-<p class="muted">Собирай монеты и повышай свой уровень.</p>
-<button class="buy" style="width:100%" onclick="alert('Это демонстрационная игра. Реального вывода средств нет.')">ПОДРОБНЕЕ</button>
+<div class="reward" id="airdropCoins">0</div>
+<p class="muted">Собирай монеты и повышай уровень</p>
+<button class="buy" onclick="alert('Демонстрационная игра. Вывод средств недоступен.')" style="width:100%">ПОДРОБНЕЕ</button>
 </div>
-<div class="panel">
-<h3>Твой прогресс</h3>
-<div class="muted">Всего тапов: <b id="taps">0</b></div>
-<div class="muted" style="margin-top:10px">Всего заработано: <b id="earned">0</b></div>
-</div>
+<div class="panel"><b>Твой прогресс</b><p class="muted">Тапов: <span id="taps">0</span></p><p class="muted">Заработано: <span id="earned">0</span></p></div>
 </section>
 
 <nav class="tabs">
+<button class="active" data-page="home"><span>🐹</span>Hamster</button>
 <button data-page="exchange"><span>🔶</span>Exchange</button>
 <button data-page="mine"><span>⛏️</span>Mine</button>
 <button data-page="friends"><span>👥</span>Friends</button>
-<button data-page="earn"><span>🐹</span>Earn</button>
+<button data-page="earn"><span>🎯</span>Earn</button>
 <button data-page="airdrop"><span>🪙</span>Airdrop</button>
 </nav>
 </div>
@@ -286,283 +206,155 @@ header{display:flex;justify-content:space-between;align-items:center;margin:8px 
 const $=id=>document.getElementById(id);
 const fmt=n=>Math.floor(n).toLocaleString("ru-RU");
 const today=()=>new Date().toLocaleDateString("en-CA");
-
-const defaults={
-coins:35592001,energy:4500,maxEnergy:4500,
-power:9,profit:229150,taps:0,earned:35592001,
-level:7,powerLevel:8,energyLevel:7,profitLevel:5,
-daily:"",comboDate:"",comboSelected:[],comboDone:false,
-cards:{},completed:{},friends:0,lastTime:Date.now()
-};
-
+const fresh={coins:0,energy:1000,maxEnergy:1000,power:1,profit:0,taps:0,earned:0,powerLevel:0,profitLevel:0,energyLevel:0,friends:0,friendInvited:false,dailyDate:"",comboDate:"",comboSelected:[],comboDone:false,cards:{},tasks:{}};
 let data;
-try{
-let old=JSON.parse(localStorage.getItem("hamsterExact"));
-data={...defaults,...(old||{})};
-}catch(e){data={...defaults}}
-
-data.cards=data.cards||{};
-data.completed=data.completed||{};
-data.comboSelected=data.comboSelected||[];
+try{data={...fresh,...JSON.parse(localStorage.getItem("hamsterExact")||"{}")}}catch(e){data={...fresh}}
+data.friendInvited=!!data.friendInvited;
+data.friends=data.friendInvited?1:0;
 
 const upgrades=[
-{id:"power",emoji:"👆",name:"Прибыль за тап",desc:"Увеличивает монеты за нажатие",base:1000,mult:1.7,max:100},
-{id:"profit",emoji:"💼",name:"Прибыль в час",desc:"+1000 монет в час",base:5000,mult:1.8,max:100},
-{id:"energy",emoji:"⚡",name:"Энергия",desc:"+500 к запасу энергии",base:3000,mult:1.7,max:30}
+{id:"power",icon:"👆",name:"Прибыль за тап",base:100,desc:"Увеличивает монеты за тап"},
+{id:"profit",icon:"💼",name:"Прибыль в час",base:500,desc:"+1000 монет в час"},
+{id:"energy",icon:"⚡",name:"Энергия",base:300,desc:"+500 максимальной энергии"}
 ];
-
 const cards=[
-{id:"marketing",emoji:"📢",name:"Маркетинг",cost:500,income:150},
-{id:"business",emoji:"🏢",name:"Бизнес",cost:1200,income:350},
-{id:"coin",emoji:"🪙",name:"Монетный двор",cost:2500,income:700},
-{id:"rocket",emoji:"🚀",name:"Ракета",cost:5000,income:1400},
-{id:"bank",emoji:"🏦",name:"Банк",cost:10000,income:3000},
-{id:"robot",emoji:"🤖",name:"Роботы",cost:20000,income:6500},
-{id:"factory",emoji:"🏭",name:"Фабрика",cost:50000,income:16000},
-{id:"planet",emoji:"🌎",name:"Планета",cost:100000,income:35000}
+{id:"marketing",icon:"📢",name:"Маркетинг",cost:500,income:150},
+{id:"business",icon:"🏢",name:"Бизнес",cost:1200,income:350},
+{id:"coin",icon:"🪙",name:"Монетный двор",cost:2500,income:700},
+{id:"rocket",icon:"🚀",name:"Ракета",cost:5000,income:1400},
+{id:"bank",icon:"🏦",name:"Банк",cost:10000,income:3000},
+{id:"robot",icon:"🤖",name:"Роботы",cost:20000,income:6500},
+{id:"factory",icon:"🏭",name:"Фабрика",cost:50000,income:16000},
+{id:"planet",icon:"🌎",name:"Планета",cost:100000,income:35000}
 ];
-
 const tasks=[
-{id:"first",emoji:"🪙",name:"Первые монеты",desc:"Заработай 1000 монет",reward:2000,check:()=>data.earned>=1000},
-{id:"taps",emoji:"👆",name:"Мастер тапов",desc:"Сделай 100 нажатий",reward:5000,check:()=>data.taps>=100},
-{id:"power",emoji:"💪",name:"Сильный палец",desc:"Улучши силу тапа",reward:5000,check:()=>data.powerLevel>=1},
-{id:"business",emoji:"🏢",name:"Бизнесмен",desc:"Купи 3 карточки",reward:10000,check:()=>Object.values(data.cards).reduce((a,b)=>a+b,0)>=3}
+{id:"first",name:"Первые монеты",desc:"Заработай 1000 монет",reward:2000,check:()=>data.earned>=1000},
+{id:"taps",name:"Мастер тапов",desc:"Сделай 100 нажатий",reward:5000,check:()=>data.taps>=100},
+{id:"power",name:"Сильный палец",desc:"Улучши силу тапа",reward:5000,check:()=>data.powerLevel>=1},
+{id:"business",name:"Бизнесмен",desc:"Купи 3 карточки",reward:10000,check:()=>Object.values(data.cards).reduce((a,b)=>a+b,0)>=3}
 ];
 
-const leagues=[
-{name:"Bronze",min:0},
-{name:"Silver",min:10000},
-{name:"Gold",min:50000},
-{name:"Platinum",min:150000},
-{name:"Diamond",min:500000},
-{name:"Legendary",min:1500000},
-{name:"Master",min:5000000}
-];
-
-function currentLeague(){
-let result=0;
-leagues.forEach((l,i)=>{if(data.coins>=l.min)result=i});
-return result;
-}
-
-function updateLevel(){
-let i=currentLeague();
-let next=leagues[i+1];
-$("leagueName").textContent=leagues[i].name+" ›";
-$("level").textContent=data.level;
-let progress=next?Math.min(100,(data.coins-leagues[i].min)/(next.min-leagues[i].min)*100):100;
-$("levelFill").style.width=progress+"%";
-}
-
+function save(){localStorage.setItem("hamsterExact",JSON.stringify(data))}
+function add(n){data.coins+=n;data.earned+=n}
+function cost(u){return Math.floor(u.base*Math.pow(1.7,data[u.id+"Level"]||0))}
 function renderUpgrades(){
-$("upgrades").innerHTML=upgrades.map(u=>{
-let lvl=data[u.id+"Level"]||0;
-let cost=Math.floor(u.base*Math.pow(u.mult,lvl));
-return `<div class="item">
-<div class="item-icon">${u.emoji}</div>
-<div class="info"><b>${u.name}</b><small>${u.desc}<br>Уровень ${lvl}/${u.max}<br>🪙 ${fmt(cost)}</small></div>
-<button class="buy" onclick="buyUpgrade('${u.id}')" ${lvl>=u.max||data.coins<cost?"disabled":""}>Купить</button>
-</div>`;
-}).join("");
+$("upgrades").innerHTML=upgrades.map(u=>`<div class="item"><div class="itemicon">${u.icon}</div><div class="info"><b>${u.name}</b><small>${u.desc}<br>Уровень ${data[u.id+"Level"]||0}<br>🪙 ${fmt(cost(u))}</small></div><button class="buy" onclick="buyUpgrade('${u.id}')" ${data.coins<cost(u)?"disabled":""}>Купить</button></div>`).join("");
 }
-
 function buyUpgrade(id){
-let u=upgrades.find(x=>x.id===id);
-let key=id+"Level";
-let lvl=data[key]||0;
-let cost=Math.floor(u.base*Math.pow(u.mult,lvl));
-if(data.coins<cost||lvl>=u.max)return;
-data.coins-=cost;
-data[key]++;
+let u=upgrades.find(x=>x.id===id),c=cost(u);
+if(data.coins<c)return;
+data.coins-=c;data[u.id+"Level"]=(data[u.id+"Level"]||0)+1;
 if(id==="power")data.power++;
 if(id==="profit")data.profit+=1000;
 if(id==="energy"){data.maxEnergy+=500;data.energy+=500}
 update();
 }
-
 function renderCards(){
-$("exchangeCards").innerHTML=cards.map(c=>{
-let count=data.cards[c.id]||0;
-let cost=Math.floor(c.cost*Math.pow(1.6,count));
-return `<div class="card">
-<div class="emoji">${c.emoji}</div><b>${c.name}</b>
-<small>+${fmt(c.income)} / час</small>
-<button class="buy" onclick="buyCard('${c.id}')" ${data.coins<cost?"disabled":""}>🪙 ${fmt(cost)}</button>
-</div>`;
+$("cards").innerHTML=cards.map(c=>{
+let count=data.cards[c.id]||0,price=Math.floor(c.cost*Math.pow(1.6,count));
+return `<div class="card"><div class="emoji">${c.icon}</div><b>${c.name}</b><small>+${fmt(c.income)} / час</small><button class="buy" onclick="buyCard('${c.id}')" ${data.coins<price?"disabled":""}>🪙 ${fmt(price)}</button></div>`;
 }).join("");
 }
-
 function buyCard(id){
-let c=cards.find(x=>x.id===id);
-let count=data.cards[id]||0;
-let cost=Math.floor(c.cost*Math.pow(1.6,count));
-if(data.coins<cost)return;
-data.coins-=cost;
-data.cards[id]=count+1;
-data.profit+=c.income;
-update();
+let c=cards.find(x=>x.id===id),count=data.cards[id]||0,price=Math.floor(c.cost*Math.pow(1.6,count));
+if(data.coins<price)return;
+data.coins-=price;data.cards[id]=count+1;data.profit+=c.income;update();
 }
-
-function getCombo(){
-let seed=Number(today().replaceAll("-",""));
-let ids=cards.slice(0,6).map(c=>c.id),out=[];
-for(let i=0;i<3;i++){
-seed=(seed*9301+49297)%233280;
-out.push(ids.splice(seed%ids.length,1)[0]);
-}
+function comboAnswer(){
+let seed=Number(today().replaceAll("-","")),ids=cards.slice(0,6).map(c=>c.id),out=[];
+for(let i=0;i<3;i++){seed=(seed*9301+49297)%233280;out.push(ids.splice(seed%ids.length,1)[0])}
 return out;
 }
-let correctCombo=getCombo();
-
 function renderCombo(){
-if(data.comboDate!==today()){
-data.comboDate=today();
-data.comboSelected=[];
-data.comboDone=false;
-}
-$("combo").innerHTML=cards.slice(0,6).map(c=>`
-<button class="combo-card ${data.comboSelected.includes(c.id)?"selected":""}" onclick="selectCombo('${c.id}')" ${data.comboDone?"disabled":""}>
-<div class="emoji">${c.emoji}</div><small>${c.name}</small></button>`).join("");
+if(data.comboDate!==today()){data.comboDate=today();data.comboSelected=[];data.comboDone=false}
+$("combo").innerHTML=cards.slice(0,6).map(c=>`<button class="${data.comboSelected.includes(c.id)?"selected":""}" onclick="selectCombo('${c.id}')"><span>${c.icon}</span><small>${c.name}</small></button>`).join("");
 $("comboStatus").textContent=data.comboDone?"Комбо выполнено!":`Выбрано: ${data.comboSelected.length}/3`;
 $("checkCombo").disabled=data.comboDone||data.comboSelected.length!==3;
 }
-
 function selectCombo(id){
 if(data.comboDone)return;
 if(data.comboSelected.includes(id))data.comboSelected=data.comboSelected.filter(x=>x!==id);
 else if(data.comboSelected.length<3)data.comboSelected.push(id);
 renderCombo();save();
 }
-
 $("checkCombo").onclick=()=>{
-if(data.comboSelected.length!==3||data.comboDone)return;
-if(correctCombo.every(x=>data.comboSelected.includes(x))){
-data.coins+=1000000;
-data.earned+=1000000;
-data.comboDone=true;
-$("comboStatus").textContent="🎉 +1 000 000 монет!";
-}else{
-data.comboSelected=[];
-$("comboStatus").textContent="❌ Неверно! Попробуй снова.";
-}
+if(data.comboSelected.length!==3)return;
+if(comboAnswer().every(x=>data.comboSelected.includes(x))){add(1000000);data.comboDone=true}
+else{data.comboSelected=[];alert("Неверное комбо! Попробуй ещё раз")}
 update();
 };
-
+function invite(){
+if(data.friendInvited)return;
+data.friendInvited=true;data.friends=1;add(25000);update();
+}
+function daily(){
+if(data.dailyDate===today())return;
+data.dailyDate=today();add(5000);update();
+}
+function boost(){
+if(data.coins<1000){alert("Нужно 1000 монет");return}
+data.coins-=1000;data.energy=data.maxEnergy;update();
+}
 function renderTasks(){
 $("tasks").innerHTML=tasks.map(t=>{
-let done=data.completed[t.id];
-return `<div class="task"><b>${t.emoji} ${t.name}</b><p>${t.desc}</p>
-<button class="buy" onclick="claimTask('${t.id}')" ${done||!t.check()?"disabled":""}>
-${done?"Выполнено ✓":t.check()?"Забрать +"+fmt(t.reward):"В процессе"}
-</button></div>`;
+let done=data.tasks[t.id];
+return `<div class="task"><b>🎯 ${t.name}</b><p>${t.desc}</p><button class="buy" onclick="claim('${t.id}')" ${done||!t.check()?"disabled":""}>${done?"Выполнено ✓":t.check()?"Забрать +"+fmt(t.reward):"В процессе"}</button></div>`;
 }).join("");
 }
-
-function claimTask(id){
+function claim(id){
 let t=tasks.find(x=>x.id===id);
-if(!t||data.completed[id]||!t.check())return;
-data.completed[id]=true;
-data.coins+=t.reward;
-data.earned+=t.reward;
-update();
+if(!t||data.tasks[id]||!t.check())return;
+data.tasks[id]=true;add(t.reward);update();
 }
-
-function dailyUpdate(){
-let done=data.daily===today();
-$("dailyBtn").disabled=done;
-$("dailyBtn").textContent=done?"УЖЕ ПОЛУЧЕНО":"ЗАБРАТЬ";
-$("dailyStatus").textContent=done?"Приходи завтра!":"Твоя награда ждёт тебя!";
-}
-
-$("dailyBtn").onclick=()=>{
-if(data.daily===today())return;
-data.daily=today();
-data.coins+=5000;
-data.earned+=5000;
-update();
-};
-
-function invite(){
-data.friends++;
-data.coins+=25000;
-data.earned+=25000;
-update();
-alert("Демо-бонус за приглашение: 25 000 монет!");
-}
-
-function showBoost(){
-let price=1000;
-if(data.coins>=price){
-data.coins-=price;
-data.energy=data.maxEnergy;
-update();
-}else alert("Недостаточно монет для Boost!");
-}
-
-$("tapButton").addEventListener("pointerdown",e=>{
+$("tap").addEventListener("pointerdown",e=>{
 if(data.energy<1)return;
-let gain=data.power;
-data.energy--;
-data.coins+=gain;
-data.earned+=gain;
-data.taps++;
-let r=$("arena").getBoundingClientRect();
-let f=document.createElement("div");
-f.className="coin-float";
-f.textContent="+"+gain;
-f.style.left=(e.clientX-r.left-15)+"px";
-f.style.top=(e.clientY-r.top-10)+"px";
-$("arena").appendChild(f);
-setTimeout(()=>f.remove(),800);
-update();
+data.energy--;data.coins+=data.power;data.earned+=data.power;data.taps++;
+let r=$("arena").getBoundingClientRect(),f=document.createElement("div");
+f.className="float";f.textContent="+"+data.power;
+f.style.left=(e.clientX-r.left-10)+"px";f.style.top=(e.clientY-r.top)+"px";
+$("arena").appendChild(f);setTimeout(()=>f.remove(),800);update();
 });
-
-document.querySelectorAll(".tabs button").forEach(btn=>{
-btn.onclick=()=>{
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
 document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
 document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-btn.classList.add("active");
-$(btn.dataset.page).classList.add("active");
-};
+b.classList.add("active");$(b.dataset.page).classList.add("active");
 });
-
-function save(){
-data.lastTime=Date.now();
-localStorage.setItem("hamsterExact",JSON.stringify(data));
-}
-
 function update(){
 $("coins").textContent=fmt(data.coins);
-$("tapStat").textContent=fmt(data.power);
-$("profitStat").textContent=fmt(data.profit);
-$("upgradeStat").textContent=fmt(Math.min(...upgrades.map(u=>Math.floor(u.base*Math.pow(u.mult,data[u.id+"Level"]||0)))));
+$("power").textContent=fmt(data.power);
+$("profit").textContent=fmt(data.profit);
+$("upgradeCost").textContent=fmt(Math.min(...upgrades.map(cost)));
 $("energy").textContent=fmt(data.energy);
 $("maxEnergy").textContent=fmt(data.maxEnergy);
-$("energyFill").style.width=(data.energy/data.maxEnergy*100)+"%";
+$("energybar").style.width=data.energy/data.maxEnergy*100+"%";
 $("taps").textContent=fmt(data.taps);
 $("earned").textContent=fmt(data.earned);
-$("friendCount").textContent=data.friends||0;
-$("airdropBalance").textContent=fmt(data.coins);
-renderUpgrades();
-renderCards();
-renderTasks();
-renderCombo();
-dailyUpdate();
-updateLevel();
-save();
+$("airdropCoins").textContent=fmt(data.coins);
+$("friendCount");
+$("inviteBtn").disabled=data.friendInvited;
+$("inviteBtn").textContent=data.friendInvited?"ДРУГ УЖЕ ПРИГЛАШЁН":"ПРИГЛАСИТЬ ДРУГА";
+$("inviteStatus").textContent=data.friendInvited?"Приглашений: 1/1 — лимит достигнут":"Приглашений: 0/1";
+let league=["Bronze","Silver","Gold","Platinum","Diamond","Legendary","Master"];
+let thresholds=[0,10000,50000,150000,500000,1500000,5000000],i=0;
+thresholds.forEach((v,j)=>{if(data.coins>=v)i=j});
+$("league").textContent=league[i]+" ›";
+$("level").textContent=Math.min(10,Math.floor(data.coins/10000)+1);
+$("levelbar").style.width=(i===6?100:Math.min(100,(data.coins-thresholds[i])/(thresholds[i+1]-thresholds[i])*100))+"%";
+$("dailyBtn").disabled=data.dailyDate===today();
+$("dailyBtn").textContent=data.dailyDate===today()?"УЖЕ ПОЛУЧЕНО":"ЗАБРАТЬ";
+$("dailyStatus").textContent=data.dailyDate===today()?"Приходи завтра!":"Забери ежедневную награду";
+renderUpgrades();renderCards();renderTasks();renderCombo();save();
 }
-
 let elapsed=Math.max(0,Math.min(86400000,Date.now()-(data.lastTime||Date.now())));
-data.coins+=Math.floor(elapsed/1000*data.profit/3600);
+data.coins+=Math.floor(elapsed*data.profit/3600000);
 data.energy=Math.min(data.maxEnergy,data.energy+elapsed/1000);
-
+data.lastTime=Date.now();
 setInterval(()=>{
 data.coins+=data.profit/3600;
 data.energy=Math.min(data.maxEnergy,data.energy+1);
 update();
 },1000);
-
-setInterval(save,5000);
+setInterval(()=>{data.lastTime=Date.now();save()},5000);
 update();
 </script>
 </body>
