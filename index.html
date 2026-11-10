@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>HAMSTER UNIVERSE</title>
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--gold:#ffdc59;--panel:#202d49;--muted:#aab9d5}
 body{margin:0;background:radial-gradient(ellipse at 50% 10%,#344a75,#10172c 65%);color:#fff;font-family:Arial,sans-serif;text-align:center;min-height:100vh;user-select:none}
-button{font:inherit;border:0;cursor:pointer;color:white}
+button{font:inherit;border:0;cursor:pointer;color:white;-webkit-tap-highlight-color:transparent}
 #app{max-width:500px;margin:auto;min-height:100vh;padding:16px 14px 100px}
 .top{display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:18px;font-weight:900;letter-spacing:1px;color:var(--gold)}
@@ -23,8 +23,6 @@ button{font:inherit;border:0;cursor:pointer;color:white}
 .stat{background:linear-gradient(145deg,#293956,#1b2740);border:1px solid #3c4e70;border-radius:15px;padding:11px 4px}
 .stat b{display:block;color:var(--gold);font-size:16px;margin-bottom:5px}
 .stat span{font-size:10px;color:#b4c1d9}
-
-/* Круг с хомяком */
 .hamster-area{height:305px;display:flex;align-items:center;justify-content:center;position:relative}
 .hamster-circle{
  width:265px;height:265px;border-radius:50%;
@@ -32,31 +30,31 @@ button{font:inherit;border:0;cursor:pointer;color:white}
  border:5px solid #8da9d6;
  box-shadow:0 0 0 7px #ffffff0c,0 0 35px #6aaaff44,inset 0 0 35px #a6c8ff25;
  display:flex;align-items:center;justify-content:center;
- position:relative;overflow:hidden;
+ position:relative;overflow:hidden;cursor:pointer;touch-action:manipulation;
+ transition:transform .08s;
 }
+.hamster-circle:active{transform:scale(.96)}
 .hamster-circle:before{
  content:"";position:absolute;inset:12px;border-radius:50%;
  border:1px solid #ffffff38;
 }
-.hamster{width:210px;height:245px;position:relative;z-index:2;cursor:pointer;touch-action:manipulation;transition:transform .08s;filter:drop-shadow(0 12px 10px #0007)}
-.hamster:active{transform:scale(.93)}
+.hamster{width:210px;height:245px;position:relative;z-index:2;pointer-events:none;filter:drop-shadow(0 12px 10px #0007)}
 #hamsterSvg{width:100%;height:100%;overflow:visible}
 .tap-hint{font-size:12px;color:#aab8d2;margin-top:0}
 .energy-wrap{margin:17px 5px}
 .energy-top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px;color:#d6def0}
 .energy-bar{height:12px;background:#303e5c;border-radius:20px;overflow:hidden}
 .energy-fill{height:100%;width:100%;background:linear-gradient(90deg,#53d9a3,#b2ef73);border-radius:20px}
-.boost{background:linear-gradient(135deg,#ffdc55,#f4a92d);color:#382b08;padding:12px 28px;border-radius:14px;font-weight:900;margin:8px}
 .bottom{position:fixed;bottom:0;left:0;right:0;background:#151e34ed;backdrop-filter:blur(15px);border-top:1px solid #34415e;z-index:10;padding:9px 2px max(9px,env(safe-area-inset-bottom))}
-.nav{display:flex;justify-content:space-around;width:100%;max-width:500px;margin:auto}
-.nav button{background:none;color:#91a0bd;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:48px}
+.nav{display:flex;justify-content:space-around;width:100%;max-width:500px;margin:auto;overflow-x:auto}
+.nav button{background:none;color:#91a0bd;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:54px}
 .nav button.active{color:var(--gold)}
 .nav .ico{font-size:20px}
 h2{font-size:24px;margin:5px 0 8px}
 .sub{color:var(--muted);font-size:13px;margin-bottom:18px}
 .card{background:linear-gradient(145deg,#263652,#19253d);border:1px solid #394e70;border-radius:17px;padding:13px;margin:10px 0;text-align:left;box-shadow:0 5px 13px #0002}
 .card-head{display:flex;align-items:center;gap:12px}
-.card-art{width:75px;height:75px;flex-shrink:0;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:42px;background:radial-gradient(circle at 35% 25%,#536e9f,#182744 75%);box-shadow:inset 0 0 18px #ffffff15}
+.card-art{width:75px;height:75px;flex-shrink:0;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:42px;background:radial-gradient(circle at 35% 25%,#536e9f,#182744 75%)}
 .card-info{flex:1;min-width:0}
 .card-info h3{margin:0 0 6px;font-size:15px}
 .card-info p{margin:0 0 3px;color:#b3c0d9;font-size:11px;line-height:1.4}
@@ -64,10 +62,9 @@ h2{font-size:24px;margin:5px 0 8px}
 .price{color:var(--gold);font-size:13px;font-weight:bold}
 .action{background:linear-gradient(135deg,#ffdc55,#f3a92d);color:#382b08;font-weight:900;padding:10px 15px;border-radius:11px;font-size:12px}
 .action:disabled{opacity:.35;cursor:not-allowed}
-.section-title{text-align:left;font-size:14px;color:#d9e4f8;margin:20px 3px 8px;font-weight:bold}
 .big-number{font-size:29px;font-weight:900;color:var(--gold);margin:15px}
 .friend-code{background:#111a2e;padding:13px;border-radius:10px;text-align:center;color:var(--gold);font-weight:bold;margin-top:12px}
-.pop{position:fixed;top:18%;left:50%;transform:translateX(-50%);background:#293956;padding:12px 20px;border-radius:20px;opacity:0;pointer-events:none;transition:.2s;z-index:20;box-shadow:0 5px 20px #0008}
+.pop{position:fixed;top:18%;left:50%;transform:translateX(-50%);background:#293956;padding:12px 20px;border-radius:20px;opacity:0;pointer-events:none;transition:.2s;z-index:20}
 .pop.show{opacity:1}
 .float{position:absolute;color:#ffe36a;font-size:25px;font-weight:900;pointer-events:none;animation:fly .8s forwards;z-index:5;text-shadow:0 2px 8px #000}
 @keyframes fly{to{transform:translateY(-80px) scale(1.3);opacity:0}}
@@ -78,9 +75,14 @@ h2{font-size:24px;margin:5px 0 8px}
 .progress div{height:100%;background:linear-gradient(90deg,#56d6a1,#b9ef70)}
 .skin-preview{font-size:40px;width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#536d9a,#192b48)}
 .skin-selected{border-color:#fbd95b;box-shadow:0 0 15px #ffdc5540}
+.cipher-row{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.cipher-card{width:82px;height:96px;border-radius:15px;background:linear-gradient(145deg,#354d76,#1c2944);border:1px solid #536b96;display:flex;align-items:center;justify-content:center;font-size:38px;cursor:pointer;transition:.15s}
+.cipher-card:active{transform:scale(.93)}
+.cipher-card.selected{border-color:var(--gold);box-shadow:0 0 16px #ffdc5555;background:linear-gradient(145deg,#62542d,#292945)}
 </style>
 </head>
 <body>
+
 <div id="app">
 <div class="top">
 <div class="logo">🐹 HAMSTER UNIVERSE</div>
@@ -92,6 +94,7 @@ h2{font-size:24px;margin:5px 0 8px}
 <small>ТВОЙ БАЛАНС</small>
 <div class="amount"><span class="coin">◉</span> <span id="coins">0</span></div>
 </div>
+
 <div class="stats">
 <div class="stat"><b id="tapStat">+1</b><span>ЗА ТАП</span></div>
 <div class="stat"><b id="upgradeStat">50</b><span>ЦЕНА АПА</span></div>
@@ -99,8 +102,8 @@ h2{font-size:24px;margin:5px 0 8px}
 </div>
 
 <div class="hamster-area" id="tapArea">
-<div class="hamster-circle">
-<div class="hamster" id="hamster">
+<div class="hamster-circle" id="hamsterCircle">
+<div class="hamster">
 <svg id="hamsterSvg" viewBox="0 0 320 350" xmlns="http://www.w3.org/2000/svg">
 <defs>
 <radialGradient id="fur" cx="38%" cy="25%" r="75%">
@@ -118,6 +121,7 @@ h2{font-size:24px;margin:5px 0 8px}
 <radialGradient id="ear"><stop stop-color="#ffc1b2"/><stop offset="1" stop-color="#a75b49"/></radialGradient>
 <radialGradient id="eye"><stop stop-color="#69544b"/><stop offset=".5" stop-color="#241815"/><stop offset="1" stop-color="#08090c"/></radialGradient>
 </defs>
+
 <ellipse cx="160" cy="325" rx="105" ry="16" fill="#000" opacity=".35"/>
 <path d="M65 278 Q42 220 78 184 Q110 150 160 160 Q220 145 250 190 Q280 238 255 300 Q220 338 160 330 Q95 337 65 278Z" fill="url(#fur)" stroke="#94552d" stroke-width="3"/>
 <path d="M65 122 Q30 42 83 39 Q129 42 121 122Z" fill="url(#fur)" stroke="#995b33" stroke-width="4"/>
@@ -125,260 +129,524 @@ h2{font-size:24px;margin:5px 0 8px}
 <path d="M199 120 Q195 48 239 42 Q290 47 257 128Z" fill="url(#fur)" stroke="#995b33" stroke-width="4"/>
 <path d="M216 101 Q214 61 240 57 Q265 63 245 108Z" fill="url(#ear)"/>
 <path d="M63 148 Q53 78 110 62 Q160 35 213 65 Q270 94 259 158 Q253 220 205 238 Q160 255 110 232 Q63 208 63 148Z" fill="url(#fur)" stroke="#92532e" stroke-width="3"/>
-<g fill="none" stroke="#ffe6b4" stroke-width="3" stroke-linecap="round" opacity=".8">
-<path d="M76 108q-10-13-5-22 M88 95q-5-14 2-21 M101 82q-1-12 8-17 M220 86q8-13 4-22 M237 96q10-10 8-19 M250 111q10-8 10-17"/>
-<path d="M67 155l-9-7 M72 174l-10-2 M252 158l10-7 M247 176l11-2 M83 211l-8 8 M98 225l-5 9 M225 224l7 8"/>
-</g>
+
 <ellipse cx="103" cy="174" rx="44" ry="42" fill="url(#face)"/>
 <ellipse cx="218" cy="174" rx="44" ry="42" fill="url(#face)"/>
 <ellipse cx="160" cy="179" rx="66" ry="54" fill="url(#face)"/>
+
 <ellipse cx="123" cy="140" rx="14" ry="18" fill="url(#eye)"/>
 <ellipse cx="198" cy="140" rx="14" ry="18" fill="url(#eye)"/>
 <ellipse cx="127" cy="134" rx="5" ry="6" fill="white"/>
 <ellipse cx="202" cy="134" rx="5" ry="6" fill="white"/>
+
 <path d="M107 119q15-12 31-2 M183 117q17-12 31 1" stroke="#985a35" stroke-width="5" fill="none" stroke-linecap="round"/>
 <path d="M147 170 Q160 157 174 170 Q172 184 160 185 Q148 184 147 170Z" fill="#bd7880"/>
-<ellipse cx="156" cy="169" rx="4" ry="2" fill="#ffe0df" opacity=".7"/>
 <path d="M160 184v11 M160 195q-13 12-23 0 M160 195q13 12 23 0" stroke="#744b42" stroke-width="3" fill="none" stroke-linecap="round"/>
-<g stroke="#a47b5d" stroke-width="2" fill="none" stroke-linecap="round">
-<path d="M108 181L52 168 M108 191L49 192 M112 200L63 216 M212 181L268 168 M212 191L271 192 M208 200L257 216"/>
-</g>
+
 <ellipse cx="98" cy="185" rx="18" ry="10" fill="#e78c83" opacity=".4"/>
 <ellipse cx="222" cy="185" rx="18" ry="10" fill="#e78c83" opacity=".4"/>
+
 <path d="M70 242 Q99 213 130 218 L160 248 L190 218 Q229 213 252 242 L274 350 H46Z" fill="url(#suit)" stroke="#142b50" stroke-width="4"/>
 <path d="M130 218 L160 248 L190 218 L178 350 H142Z" fill="url(#shirt)" stroke="#d7e3f3" stroke-width="2"/>
-<path d="M130 218 L160 248 L144 280 L114 232Z" fill="#244a81"/>
-<path d="M190 218 L160 248 L176 280 L206 232Z" fill="#244a81"/>
 <path d="M145 255 L160 267 L175 255 L168 292 L160 302 L152 292Z" fill="#d84949"/>
-<path d="M160 267L160 302" stroke="#f8c1a6" stroke-width="2"/>
-<circle cx="160" cy="318" r="4" fill="#e7c76c"/>
-<circle cx="160" cy="338" r="4" fill="#e7c76c"/>
+
 <ellipse cx="92" cy="310" rx="25" ry="17" fill="#e9bd94" stroke="#a96b43" stroke-width="2"/>
 <ellipse cx="228" cy="310" rx="25" ry="17" fill="#e9bd94" stroke="#a96b43" stroke-width="2"/>
-<path d="M80 309l-5 7 M91 310l-2 9 M102 309l2 8 M218 309l-2 8 M229 310l2 9 M240 309l5 7" stroke="#a76a4a" stroke-width="2" stroke-linecap="round"/>
 </svg>
 </div>
 </div>
 </div>
-<div class="tap-hint">👆 НАЖИМАЙ НА ХОМЯКА</div>
+
+<div class="tap-hint">👆 НАЖИМАЙ НА ВЕСЬ КРУГ</div>
+
 <div class="energy-wrap">
-<div class="energy-top"><span>⚡ ЭНЕРГИЯ</span><span id="energyText">1000 / 1000</span></div>
+<div class="energy-top">
+<span>⚡ ЭНЕРГИЯ</span>
+<span id="energyText">1000 / 1000</span>
+</div>
 <div class="energy-bar"><div class="energy-fill" id="energyFill"></div></div>
 </div>
-<button class="boost" onclick="boost()">⚡ BOOST</button>
 </div>
 
-<div id="exchange" class="page"><h2>🏦 EXCHANGE</h2><div class="sub">Твоя космическая биржа</div>
-<div class="card"><div class="card-head"><div class="card-art">₿</div><div class="card-info"><h3>Bitcoin Exchange</h3><p>Твой игровой баланс</p></div></div><div class="card-bottom"><span class="price" id="exchangeCoins">0</span></div></div>
-<div class="card"><div class="card-head"><div class="card-art">📈</div><div class="card-info"><h3>Крипто-бонус</h3><p>Забери бонус за посещение биржи</p></div></div><div class="card-bottom"><span class="price">+100 монет</span><button class="action" onclick="claimBonus()">ЗАБРАТЬ</button></div></div>
-</div>
-
-<div id="mine" class="page"><h2>⛏️ ШАХТА</h2><div class="sub">Улучшай своего хомяка</div>
+<div id="mine" class="page">
+<h2>⛏️ ШАХТА</h2>
+<div class="sub">Улучшай своего хомяка</div>
 <div id="mineCards"></div>
 </div>
 
-<div id="friends" class="page"><h2>👥 ДРУЗЬЯ</h2><div class="sub">Пригласи друга в свою команду</div>
-<div class="card"><div class="card-head"><div class="card-art">🚀</div><div class="card-info"><h3>Приглашение друга</h3><p>Пригласи одного друга и получи награду</p></div></div><div class="big-number">+2 500 🪙</div><button class="action" id="inviteButton" style="width:100%" onclick="invite()">ПРИГЛАСИТЬ ДРУГА</button><div class="friend-code" id="inviteStatus">ДРУГ ЕЩЁ НЕ ПРИГЛАШЁН</div></div>
+<div id="cipher" class="page">
+<h2>🔐 ШИФР ДНЯ</h2>
+<div class="sub">Выбери правильные карточки и получи награду</div>
+
+<div class="card">
+<div class="card-head">
+<div class="card-art">🧩</div>
+<div class="card-info">
+<h3>Секретный код</h3>
+<p>Каждый день появляется новый шифр</p>
+</div>
 </div>
 
-<div id="earn" class="page"><h2>🎁 ЗАДАНИЯ</h2><div class="sub">Выполняй задания и получай награды</div><div id="missionCards"></div></div>
+<div class="cipher-row" id="cipherRow"></div>
+<div class="friend-code" id="cipherStatus">ВЫБЕРИ 3 КАРТОЧКИ</div>
 
-<div id="airdrop" class="page"><h2>🪂 AIRDROP</h2><div class="sub">Специальные награды</div>
-<div class="card"><div class="card-head"><div class="card-art">🎁</div><div class="card-info"><h3>Ежедневный подарок</h3><p>Награда за посещение игры</p></div></div><div class="card-bottom"><span class="price">+500 🪙</span><button class="action" id="dailyButton" onclick="dailyReward()">ЗАБРАТЬ</button></div></div>
-<div class="card"><div class="card-head"><div class="card-art">🌠</div><div class="card-info"><h3>Звёздный бонус</h3><p>Подарок для исследователей</p></div></div><div class="card-bottom"><span class="price">+1000 🪙</span><button class="action" id="starButton" onclick="starReward()">ЗАБРАТЬ</button></div></div>
+<div class="card-bottom">
+<span class="price">🎁 +1 000 🪙</span>
+<button class="action" id="cipherButton" onclick="checkCipher()">ПРОВЕРИТЬ</button>
+</div>
 </div>
 
-<div id="universe" class="page"><h2>🌌 ВСЕЛЕННАЯ</h2><div class="sub">Строй собственную империю</div><div id="universeCards"></div></div>
-
-<div id="skins" class="page"><h2>🎨 СКИНЫ</h2><div class="sub">Выбирай внешний вид своего хомяка</div><div id="skinCards"></div></div>
+<div class="card">
+<div class="card-head">
+<div class="card-art">💡</div>
+<div class="card-info">
+<h3>Подсказка</h3>
+<p>Правильный шифр состоит из трёх символов</p>
+</div>
+</div>
+</div>
 </div>
 
-<div class="bottom"><div class="nav">
+<div id="universe" class="page">
+<h2>🌌 ВСЕЛЕННАЯ</h2>
+<div class="sub">Строй собственную империю</div>
+<div id="universeCards"></div>
+</div>
+
+<div id="skins" class="page">
+<h2>🎨 СКИНЫ</h2>
+<div class="sub">Выбирай внешний вид своего хомяка</div>
+<div id="skinCards"></div>
+</div>
+</div>
+
+<div class="bottom">
+<div class="nav">
 <button class="active" onclick="showPage('home',this)"><span class="ico">🐹</span>Hamster</button>
-<button onclick="showPage('exchange',this)"><span class="ico">🏦</span>Exchange</button>
 <button onclick="showPage('mine',this)"><span class="ico">⛏️</span>Mine</button>
-<button onclick="showPage('friends',this)"><span class="ico">👥</span>Friends</button>
-<button onclick="showPage('earn',this)"><span class="ico">🎁</span>Earn</button>
-<button onclick="showPage('airdrop',this)"><span class="ico">🪂</span>Airdrop</button>
+<button onclick="showPage('cipher',this)"><span class="ico">🔐</span>Cipher</button>
 <button onclick="showPage('universe',this)"><span class="ico">🌌</span>Space</button>
 <button onclick="showPage('skins',this)"><span class="ico">🎨</span>Skins</button>
-</div></div>
+</div>
+</div>
+
 <div class="pop" id="popup"></div>
 
 <script>
-const KEY="hamster_universe_v2";
+const KEY="hamster_universe_final";
+
 const defaults={
-coins:0,taps:0,energy:1000,maxEnergy:1000,tapPower:1,
-tapLevel:1,energyLevel:1,autoLevel:0,tapPrice:50,energyPrice:100,autoPrice:250,
-hour:0,friend:false,bonus:false,daily:false,star:false,upgrades:0,
-missions:{tap:false,upgrade:false,rich:false},space:{},skins:{},skin:"classic"
+coins:0,
+taps:0,
+energy:1000,
+maxEnergy:1000,
+tapPower:1,
+tapLevel:1,
+energyLevel:1,
+autoLevel:0,
+tapPrice:50,
+energyPrice:100,
+autoPrice:250,
+hour:0,
+upgrades:0,
+space:{},
+skins:{},
+skin:"classic",
+cipherDone:false,
+cipherChoice:[]
 };
+
 let data=JSON.parse(JSON.stringify(defaults));
-try{const s=localStorage.getItem(KEY);if(s){const old=JSON.parse(s);data={...defaults,...old,missions:{...defaults.missions,...old.missions},space:{...old.space},skins:{...old.skins}}}}catch(e){}
-function save(){localStorage.setItem(KEY,JSON.stringify(data))}
-function fmt(n){return Math.floor(n).toLocaleString("en-US")}
-function toast(s){let p=document.getElementById("popup");p.textContent=s;p.classList.add("show");setTimeout(()=>p.classList.remove("show"),1600)}
-function addCoins(n){data.coins+=n;save();update()}
-function showPage(id,btn){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");update()}
+
+try{
+const saved=localStorage.getItem(KEY);
+if(saved){
+const old=JSON.parse(saved);
+data={
+...defaults,
+...old,
+space:{...defaults.space,...old.space},
+skins:{...defaults.skins,...old.skins}
+};
+}
+}catch(e){}
+
+function save(){
+localStorage.setItem(KEY,JSON.stringify(data));
+}
+
+function fmt(n){
+return Math.floor(n).toLocaleString("en-US");
+}
+
+function toast(text){
+const p=document.getElementById("popup");
+p.textContent=text;
+p.classList.add("show");
+setTimeout(()=>p.classList.remove("show"),1600);
+}
+
+function showPage(id,btn){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+
+document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+if(btn)btn.classList.add("active");
+
+update();
+}
+
 function update(){
- coins.textContent=fmt(data.coins);
- tapStat.textContent="+"+fmt(data.tapPower);
- upgradeStat.textContent=fmt(data.tapPrice);
- hourStat.textContent=fmt(data.hour);
- energyText.textContent=fmt(data.energy)+" / "+fmt(data.maxEnergy);
- energyFill.style.width=data.energy/data.maxEnergy*100+"%";
- league.textContent=data.coins>=100000?"🏆 DIAMOND":data.coins>=10000?"💎 GOLD":data.coins>=1000?"🥈 SILVER":"🥉 BRONZE I";
- exchangeCoins.textContent=fmt(data.coins);
- inviteButton.disabled=data.friend;
- inviteButton.textContent=data.friend?"УЖЕ ПРИГЛАШЁН":"ПРИГЛАСИТЬ ДРУГА";
- inviteStatus.textContent=data.friend?"✅ ДРУГ УЖЕ ПРИГЛАШЁН":"ДРУГ ЕЩЁ НЕ ПРИГЛАШЁН";
- dailyButton.disabled=data.daily;dailyButton.textContent=data.daily?"ПОЛУЧЕНО":"ЗАБРАТЬ";
- starButton.disabled=data.star;starButton.textContent=data.star?"ПОЛУЧЕНО":"ЗАБРАТЬ";
- renderMine();renderSpace();renderSkins();renderMissions();applySkin();
+document.getElementById("coins").textContent=fmt(data.coins);
+document.getElementById("tapStat").textContent="+"+fmt(data.tapPower);
+document.getElementById("upgradeStat").textContent=fmt(data.tapPrice);
+document.getElementById("hourStat").textContent=fmt(data.hour);
+document.getElementById("energyText").textContent=fmt(data.energy)+" / "+fmt(data.maxEnergy);
+document.getElementById("energyFill").style.width=(data.energy/data.maxEnergy*100)+"%";
+
+document.getElementById("league").textContent=
+data.coins>=100000?"🏆 DIAMOND":
+data.coins>=10000?"💎 GOLD":
+data.coins>=1000?"🥈 SILVER":"🥉 BRONZE I";
+
+renderMine();
+renderSpace();
+renderSkins();
+renderCipher();
 }
+
 function tap(e){
- if(data.energy<=0)return toast("⚡ Энергия закончилась!");
- data.energy--;data.coins+=data.tapPower;data.taps++;
- let area=document.getElementById("tapArea"),f=document.createElement("div");
- f.className="float";f.textContent="+"+data.tapPower;
- let r=area.getBoundingClientRect();f.style.left=(e.clientX-r.left)+"px";f.style.top=(e.clientY-r.top)+"px";area.appendChild(f);setTimeout(()=>f.remove(),800);
- save();update();
+if(data.energy<=0){
+toast("⚡ Энергия закончилась!");
+return;
 }
-document.getElementById("hamster").addEventListener("pointerdown",tap);
-function boost(){if(data.energy<100)return toast("Мало энергии!");data.energy=Math.min(data.maxEnergy,data.energy+250);save();update();toast("⚡ Энергия восстановлена!")}
-function buyTap(){if(data.coins<data.tapPrice)return toast("Не хватает монет!");data.coins-=data.tapPrice;data.tapPower++;data.tapLevel++;data.tapPrice=Math.ceil(data.tapPrice*1.65);data.upgrades++;save();update();toast("🐹 Сила увеличена!")}
-function buyEnergy(){if(data.coins<data.energyPrice)return toast("Не хватает монет!");data.coins-=data.energyPrice;data.maxEnergy+=250;data.energy=data.maxEnergy;data.energyLevel++;data.energyPrice=Math.ceil(data.energyPrice*1.7);data.upgrades++;save();update();toast("⚡ Энергия увеличена!")}
-function buyAuto(){if(data.coins<data.autoPrice)return toast("Не хватает монет!");data.coins-=data.autoPrice;data.autoLevel++;data.hour+=100;data.autoPrice=Math.ceil(data.autoPrice*1.8);data.upgrades++;save();update();toast("🌟 Автодобыча улучшена!")}
-function invite(){if(data.friend)return;data.friend=true;addCoins(2500);toast("🚀 Друг приглашён! +2500")}
-function claimBonus(){if(data.bonus)return toast("Уже получено!");data.bonus=true;addCoins(100);toast("+100 монет!")}
-function dailyReward(){if(data.daily)return;data.daily=true;addCoins(500);toast("+500 монет!")}
-function starReward(){if(data.star)return;data.star=true;addCoins(1000);toast("+1000 монет!")}
-const missions=[
-{id:"tap",name:"🐹 Первое касание",desc:"Нажми на хомяка 10 раз",goal:10,reward:100,check:()=>data.taps},
-{id:"upgrade",name:"⛏️ Улучшатель",desc:"Купи первое улучшение",goal:1,reward:250,check:()=>data.upgrades},
-{id:"rich",name:"🌌 Космический миллионер",desc:"Накопи 1000 монет",goal:1000,reward:500,check:()=>data.coins}
-];
-function renderMissions(){
- missionCards.innerHTML="";
- missions.forEach(m=>{
- let done=data.missions[m.id],v=Math.min(100,m.check()/m.goal*100);
- let el=document.createElement("div");el.className="card";
- el.innerHTML=`<div class="mission"><div><b>${m.name}</b><small>${m.desc}</small></div><span class="price">🪙 ${m.reward}</span></div><div class="progress"><div style="width:${v}%"></div></div><div class="card-bottom"><span class="price">${Math.min(m.check(),m.goal)} / ${m.goal}</span><button class="action" ${done||m.check()<m.goal?"disabled":""}>${done?"ПОЛУЧЕНО":"ЗАБРАТЬ"}</button></div>`;
- el.querySelector("button").onclick=()=>{if(done||m.check()<m.goal)return;data.missions[m.id]=true;addCoins(m.reward);toast("🎁 Награда получена!")};
- missionCards.appendChild(el);
- });
+
+data.energy--;
+data.coins+=data.tapPower;
+data.taps++;
+
+const area=document.getElementById("tapArea");
+const f=document.createElement("div");
+f.className="float";
+f.textContent="+"+data.tapPower;
+
+const r=area.getBoundingClientRect();
+f.style.left=(e.clientX-r.left)+"px";
+f.style.top=(e.clientY-r.top)+"px";
+
+area.appendChild(f);
+setTimeout(()=>f.remove(),800);
+
+save();
+update();
 }
+
+document.getElementById("hamsterCircle").addEventListener("pointerdown",tap);
+
+function buyTap(){
+if(data.coins<data.tapPrice)return toast("Не хватает монет!");
+
+data.coins-=data.tapPrice;
+data.tapPower++;
+data.tapLevel++;
+data.tapPrice=Math.ceil(data.tapPrice*1.65);
+data.upgrades++;
+
+save();
+update();
+toast("🐹 Сила увеличена!");
+}
+
+function buyEnergy(){
+if(data.coins<data.energyPrice)return toast("Не хватает монет!");
+
+data.coins-=data.energyPrice;
+data.maxEnergy+=250;
+data.energy=data.maxEnergy;
+data.energyLevel++;
+data.energyPrice=Math.ceil(data.energyPrice*1.7);
+
+save();
+update();
+toast("⚡ Энергия увеличена!");
+}
+
+function buyAuto(){
+if(data.coins<data.autoPrice)return toast("Не хватает монет!");
+
+data.coins-=data.autoPrice;
+data.autoLevel++;
+data.hour+=100;
+data.autoPrice=Math.ceil(data.autoPrice*1.8);
+
+save();
+update();
+toast("🌟 Автодобыча улучшена!");
+}
+
 const mineItems=[
-{id:"tap",icon:"🐹",name:"Сила хомяка",desc:"Увеличивает монеты за каждый тап",price:()=>data.tapPrice,level:()=>data.tapLevel,buy:buyTap},
-{id:"energy",icon:"⚡",name:"Энергетический реактор",desc:"Увеличивает максимальную энергию",price:()=>data.energyPrice,level:()=>data.energyLevel,buy:buyEnergy},
-{id:"auto",icon:"🌟",name:"Автоматическая добыча",desc:"Создаёт пассивный доход",price:()=>data.autoPrice,level:()=>data.autoLevel,buy:buyAuto}
+{
+icon:"🐹",
+name:"Сила хомяка",
+desc:"Увеличивает монеты за каждый тап",
+price:()=>data.tapPrice,
+level:()=>data.tapLevel,
+buy:buyTap
+},
+{
+icon:"⚡",
+name:"Энергетический реактор",
+desc:"Увеличивает максимальную энергию",
+price:()=>data.energyPrice,
+level:()=>data.energyLevel,
+buy:buyEnergy
+},
+{
+icon:"🌟",
+name:"Автоматическая добыча",
+desc:"Создаёт пассивный доход",
+price:()=>data.autoPrice,
+level:()=>data.autoLevel,
+buy:buyAuto
+}
 ];
+
 function renderMine(){
- mineCards.innerHTML="";
- mineItems.forEach(m=>{
- let el=document.createElement("div");el.className="card";
- el.innerHTML=`<div class="card-head"><div class="card-art">${m.icon}</div><div class="card-info"><h3>${m.name}</h3><p>${m.desc}</p><p>Уровень: ${m.level()}</p></div></div><div class="card-bottom"><span class="price">🪙 ${fmt(m.price())}</span><button class="action" ${data.coins<m.price()?"disabled":""}>УЛУЧШИТЬ</button></div>`;
- el.querySelector("button").onclick=m.buy;mineCards.appendChild(el);
- });
+const box=document.getElementById("mineCards");
+box.innerHTML="";
+
+mineItems.forEach(m=>{
+const el=document.createElement("div");
+el.className="card";
+
+el.innerHTML=`
+<div class="card-head">
+<div class="card-art">${m.icon}</div>
+<div class="card-info">
+<h3>${m.name}</h3>
+<p>${m.desc}</p>
+<p>Уровень: ${m.level()}</p>
+</div>
+</div>
+<div class="card-bottom">
+<span class="price">🪙 ${fmt(m.price())}</span>
+<button class="action" ${data.coins<m.price()?"disabled":""}>УЛУЧШИТЬ</button>
+</div>`;
+
+el.querySelector("button").onclick=m.buy;
+box.appendChild(el);
+});
 }
+
 const spaceItems=[
-["planet","🪐","Планета Сатурн","Золотая планета с кольцами",500,30],
-["rocket","🚀","Космическая ракета","Ракета для исследования галактик",1000,70],
-["chest","💰","Золотой сундук","Сокровища и монеты",1500,100],
-["astronaut","👨‍🚀","Хомяк-космонавт","Исследователь космоса",2500,160],
-["crystal","💎","Кристальная шахта","Добыча редких кристаллов",3500,220],
-["station","🛰️","Орбитальная станция","Станция на орбите",5000,350],
-["moon","🌕","Лунная база","База на поверхности Луны",7000,450],
-["portal","🌀","Галактический портал","Путь к новым измерениям",10000,650],
-["meteor","☄️","Золотой метеорит","Редкий источник энергии",15000,900],
-["satellite","📡","Сеть спутников","Система спутников",22000,1300],
-["blackhole","🌑","Чёрная дыра","Мощный космический объект",35000,2100],
-["galaxy","🌌","Собственная галактика","Целая галактика под управлением",60000,4000],
-["spaceship","🛸","Инопланетный корабль","Технологии другой цивилизации",90000,6500],
-["sun","☀️","Миниатюрное солнце","Источник огромной энергии",150000,10000],
-["universe","✨","Новая вселенная","Создай собственную вселенную",300000,25000],
-["factory","🏭","Космический завод","Производит монеты автоматически",12000,850],
-["office","🏢","Главный офис","Управление космической империей",18000,1200],
-["bank","🏦","Галактический банк","Хранит космические богатства",25000,1800],
-["laboratory","🧪","Научная лаборатория","Исследует новые технологии",30000,2200],
-["mine","⛏️","Алмазная шахта","Добывает драгоценные минералы",40000,3000],
-["airport","🛫","Космопорт","Принимает межгалактические корабли",55000,4200],
-["tower","🏙️","Звёздный небоскрёб","Самое высокое здание галактики",80000,6000],
-["farm","🌱","Космическая ферма","Выращивает энергию и ресурсы",110000,8500],
-["hotel","🏨","Отель на Луне","Принимает путешественников",180000,14000],
-["factory2","⚙️","Мегазавод","Огромное производство",250000,20000],
-["command","🎛️","Центр управления","Управляет всей империей",400000,35000]
-].map(x=>({id:x[0],icon:x[1],name:x[2],desc:x[3],price:x[4],income:x[5]}));
+["planet","🪐","Планета","Собственная планета",500,30],
+["rocket","🚀","Космическая ракета","Исследуй новые галактики",1000,70],
+["satellite","🛰️","Спутник","Орбитальная система",2500,150],
+["factory","🏭","Космический завод","Производит монеты",5000,400],
+["office","🏢","Главный офис","Управление империей",10000,800],
+["laboratory","🧪","Лаборатория","Создаёт новые технологии",18000,1500],
+["bank","🏦","Галактический банк","Хранит богатства",30000,2500],
+["mine","⛏️","Алмазная шахта","Добывает ресурсы",45000,4000],
+["moon","🌕","Лунная база","База на Луне",70000,6500],
+["portal","🌀","Портал","Открывает измерения",110000,10000],
+["galaxy","🌌","Собственная галактика","Целая галактика",200000,18000],
+["universe","✨","Новая вселенная","Создай свой мир",500000,40000]
+].map(x=>({
+id:x[0],
+icon:x[1],
+name:x[2],
+desc:x[3],
+price:x[4],
+income:x[5]
+}));
+
 function renderSpace(){
- universeCards.innerHTML="";
- spaceItems.forEach(m=>{
- let owned=!!data.space[m.id],el=document.createElement("div");el.className="card";
- el.innerHTML=`<div class="card-head"><div class="card-art">${m.icon}</div><div class="card-info"><h3>${m.name}</h3><p>${m.desc}</p><p>Прибыль: +${fmt(m.income)} / час</p></div></div><div class="card-bottom"><span class="price">${owned?"✅ КУПЛЕНО":"🪙 "+fmt(m.price)}</span><button class="action" ${owned||data.coins<m.price?"disabled":""}>${owned?"КУПЛЕНО":"КУПИТЬ"}</button></div>`;
- el.querySelector("button").onclick=()=>{if(owned||data.coins<m.price)return toast("Не хватает монет!");data.coins-=m.price;data.space[m.id]=true;data.hour+=m.income;save();update();toast(m.icon+" Покупка совершена!")};
- universeCards.appendChild(el);
- });
+const box=document.getElementById("universeCards");
+box.innerHTML="";
+
+spaceItems.forEach(m=>{
+const owned=!!data.space[m.id];
+const el=document.createElement("div");
+el.className="card";
+
+el.innerHTML=`
+<div class="card-head">
+<div class="card-art">${m.icon}</div>
+<div class="card-info">
+<h3>${m.name}</h3>
+<p>${m.desc}</p>
+<p>Прибыль: +${fmt(m.income)} / час</p>
+</div>
+</div>
+<div class="card-bottom">
+<span class="price">${owned?"✅ КУПЛЕНО":"🪙 "+fmt(m.price)}</span>
+<button class="action" ${owned||data.coins<m.price?"disabled":""}>
+${owned?"КУПЛЕНО":"КУПИТЬ"}
+</button>
+</div>`;
+
+el.querySelector("button").onclick=()=>{
+if(owned||data.coins<m.price)return;
+
+data.coins-=m.price;
+data.space[m.id]=true;
+data.hour+=m.income;
+
+save();
+update();
+toast(m.icon+" Покупка совершена!");
+};
+
+box.appendChild(el);
+});
 }
+
 const skinItems=[
-{id:"classic",name:"Классический",icon:"🐹",desc:"Оригинальный рыжий хомяк",price:0,color:"#e5a75e"},
-{id:"gold",name:"Золотой",icon:"👑",desc:"Золотая шерсть и королевский вид",price:1000,color:"#ffcc3c"},
-{id:"astronaut",name:"Космонавт",icon:"👨‍🚀",desc:"Шлем и космический костюм",price:2500,color:"#b9d7ef"},
-{id:"ninja",name:"Ниндзя",icon:"🥷",desc:"Тёмный костюм мастера скрытности",price:4000,color:"#333b52"},
-{id:"king",name:"Королевский",icon:"👑",desc:"Корона и роскошная накидка",price:7000,color:"#a77be9"},
-{id:"ice",name:"Ледяной",icon:"❄️",desc:"Морозная шерсть и ледяной костюм",price:10000,color:"#79dfff"},
-{id:"fire",name:"Огненный",icon:"🔥",desc:"Пылающий редкий образ",price:15000,color:"#ff7044"},
-{id:"cyber",name:"Кибер-хомяк",icon:"🤖",desc:"Футуристический роботизированный костюм",price:22000,color:"#39e2d0"},
-{id:"pirate",name:"Пират",icon:"🏴‍☠️",desc:"Капитан семи галактик",price:30000,color:"#a76a43"},
-{id:"vampire",name:"Вампир",icon:"🧛",desc:"Тёмный аристократ",price:45000,color:"#a65b87"},
-{id:"alien",name:"Пришелец",icon:"👽",desc:"Гость из далёкой галактики",price:60000,color:"#78db83"},
-{id:"diamond",name:"Алмазный",icon:"💎",desc:"Блестящий редкий хомяк",price:90000,color:"#70dcff"},
-{id:"samurai",name:"Самурай",icon:"⚔️",desc:"Легендарный воин",price:120000,color:"#ce5050"},
-{id:"neon",name:"Неоновый",icon:"🌈",desc:"Светящийся стиль будущего",price:160000,color:"#d65bff"},
-{id:"cosmic",name:"Космический",icon:"🌌",desc:"Сила целой галактики",price:250000,color:"#765bdf"},
-{id:"royal",name:"Император",icon:"💫",desc:"Самый роскошный образ",price:500000,color:"#e6b84e"}
+{id:"classic",name:"Классический",icon:"🐹",desc:"Оригинальный хомяк",price:0},
+{id:"gold",name:"Золотой",icon:"👑",desc:"Королевский стиль",price:1000},
+{id:"astronaut",name:"Космонавт",icon:"👨‍🚀",desc:"Покоритель космоса",price:2500},
+{id:"ninja",name:"Ниндзя",icon:"🥷",desc:"Мастер скрытности",price:5000},
+{id:"ice",name:"Ледяной",icon:"❄️",desc:"Морозный стиль",price:10000},
+{id:"fire",name:"Огненный",icon:"🔥",desc:"Пылающий образ",price:15000},
+{id:"cyber",name:"Кибер-хомяк",icon:"🤖",desc:"Стиль будущего",price:30000},
+{id:"alien",name:"Пришелец",icon:"👽",desc:"Гость из космоса",price:60000},
+{id:"diamond",name:"Алмазный",icon:"💎",desc:"Очень редкий скин",price:100000}
 ];
+
 function renderSkins(){
- skinCards.innerHTML="";
- skinItems.forEach(s=>{
- let owned=s.price===0||!!data.skins[s.id],selected=data.skin===s.id,el=document.createElement("div");
- el.className="card"+(selected?" skin-selected":"");
- el.innerHTML=`<div class="card-head"><div class="skin-preview" style="background:radial-gradient(circle,${s.color},#192b48)">${s.icon}</div><div class="card-info"><h3>${s.name} ${selected?"✓":""}</h3><p>${s.desc}</p></div></div><div class="card-bottom"><span class="price">${owned?"✅ ОТКРЫТ":"🪙 "+fmt(s.price)}</span><button class="action" ${selected||!owned&&data.coins<s.price?"disabled":""}>${selected?"ВЫБРАН":owned?"ВЫБРАТЬ":"КУПИТЬ"}</button></div>`;
- el.querySelector("button").onclick=()=>{
- if(!owned){if(data.coins<s.price)return toast("Не хватает монет!");data.coins-=s.price;data.skins[s.id]=true}
- data.skin=s.id;save();update();toast("🎨 Скин изменён!");
- };
- skinCards.appendChild(el);
- });
+const box=document.getElementById("skinCards");
+box.innerHTML="";
+
+skinItems.forEach(s=>{
+const owned=s.price===0||!!data.skins[s.id];
+const selected=data.skin===s.id;
+
+const el=document.createElement("div");
+el.className="card"+(selected?" skin-selected":"");
+
+el.innerHTML=`
+<div class="card-head">
+<div class="skin-preview">${s.icon}</div>
+<div class="card-info">
+<h3>${s.name} ${selected?"✓":""}</h3>
+<p>${s.desc}</p>
+</div>
+</div>
+<div class="card-bottom">
+<span class="price">${owned?"✅ ОТКРЫТ":"🪙 "+fmt(s.price)}</span>
+<button class="action" ${selected||(!owned&&data.coins<s.price)?"disabled":""}>
+${selected?"ВЫБРАН":owned?"ВЫБРАТЬ":"КУПИТЬ"}
+</button>
+</div>`;
+
+el.querySelector("button").onclick=()=>{
+if(!owned){
+if(data.coins<s.price)return toast("Не хватает монет!");
+data.coins-=s.price;
+data.skins[s.id]=true;
 }
-function applySkin(){
- const colors={
- classic:["#ffe8b4","#e5a75e","#bd743b","#4a91e8","#24559b"],
- gold:["#fff1a0","#f5c52c","#bd841b","#f2b72f","#986117"],
- astronaut:["#f0e6d5","#c9d6e8","#9aadc5","#d9e6f5","#647b9c"],
- ninja:["#d7b28b","#6d5445","#332d35","#303447","#171b29"],
- king:["#fff0cc","#e2a75e","#b36d35","#9b6ae2","#58358f"],
- ice:["#f4ffff","#9cdef5","#5b9fc6","#9ce8ff","#4789c5"],
- fire:["#fff0c0","#ed8942","#a63e2a","#e65b34","#8b2020"],
- cyber:["#d8ffff","#78d8d4","#277e8c","#37e2d0","#116a85"],
- pirate:["#f5d3a0","#bd824c","#7a472e","#68422e","#352a2a"],
- vampire:["#fff0df","#b37a91","#61354c","#542b54","#25162e"],
- alien:["#d6ffc7","#83d879","#438c4b","#56a85c","#245c39"],
- diamond:["#efffff","#8fe5ff","#3b9fc4","#70dcff","#2c689c"],
- samurai:["#ffe1b5","#bc6c4f","#63362e","#b84040","#58202c"],
- neon:["#ffe1ff","#ce75ed","#763ba4","#d65bff","#63238a"],
- cosmic:["#fff0ff","#9479db","#55408d","#765bdf","#312054"],
- royal:["#fff2be","#dcb54e","#92702c","#d7ac3c","#73501b"]
- };
- let c=colors[data.skin]||colors.classic;
- document.querySelectorAll("#hamsterSvg [data-fur]").forEach(el=>el.setAttribute("fill",c[1]));
- document.querySelectorAll("#hamsterSvg [data-suit]").forEach(el=>el.setAttribute("fill",c[3]));
+
+data.skin=s.id;
+save();
+update();
+toast("🎨 Скин изменён!");
+};
+
+box.appendChild(el);
+});
 }
+
+/* ШИФР ДНЯ */
+const cipherSymbols=["🐹","🪙","🚀","🪐","💎","⚡","🏭","🛰️"];
+const secretCipher=["🐹","🚀","💎"];
+
+function renderCipher(){
+const row=document.getElementById("cipherRow");
+if(!row)return;
+
+row.innerHTML="";
+
+for(let i=0;i<3;i++){
+const card=document.createElement("div");
+card.className="cipher-card";
+card.textContent=data.cipherChoice[i]||"?";
+
+if(data.cipherChoice[i])card.classList.add("selected");
+
+card.onclick=()=>{
+if(data.cipherDone)return;
+
+const current=data.cipherChoice[i]||"";
+const index=cipherSymbols.indexOf(current);
+data.cipherChoice[i]=cipherSymbols[(index+1)%cipherSymbols.length];
+
+save();
+renderCipher();
+};
+
+row.appendChild(card);
+}
+
+const status=document.getElementById("cipherStatus");
+const button=document.getElementById("cipherButton");
+
+if(data.cipherDone){
+status.textContent="✅ ШИФР УЖЕ РАЗГАДАН!";
+button.disabled=true;
+button.textContent="ПОЛУЧЕНО";
+}else{
+status.textContent="ВЫБЕРИ 3 КАРТОЧКИ";
+button.disabled=false;
+button.textContent="ПРОВЕРИТЬ";
+}
+}
+
+function checkCipher(){
+if(data.cipherDone)return;
+
+if(data.cipherChoice.length<3||data.cipherChoice.some(x=>!x)){
+toast("🔐 Выбери все карточки!");
+return;
+}
+
+const correct=secretCipher.every((x,i)=>data.cipherChoice[i]===x);
+
+if(correct){
+data.cipherDone=true;
+data.coins+=1000;
+save();
+update();
+toast("🎉 ШИФР РАЗГАДАН! +1000 🪙");
+}else{
+toast("❌ Неверный шифр!");
+data.cipherChoice=[];
+save();
+renderCipher();
+}
+}
+
+/* Восстановление энергии и пассивный доход */
 setInterval(()=>{
- let changed=false;
- if(data.energy<data.maxEnergy){data.energy=Math.min(data.maxEnergy,data.energy+5);changed=true}
- if(data.hour>0){data.coins+=data.hour/720;changed=true}
- if(changed){save();update()}
+let changed=false;
+
+if(data.energy<data.maxEnergy){
+data.energy=Math.min(data.maxEnergy,data.energy+5);
+changed=true;
+}
+
+if(data.hour>0){
+data.coins+=data.hour/720;
+changed=true;
+}
+
+if(changed){
+save();
+update();
+}
 },5000);
+
 update();
 </script>
+
 </body>
 </html>
