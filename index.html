@@ -139,15 +139,6 @@ button:active{transform:scale(.96)}
   color:#342606;
   box-shadow:0 5px 14px #0004;
 }
-.boost-btn.active{
-  background:linear-gradient(135deg,#ff7b47,#ef3f45);
-  color:#fff;
-  animation:boostGlow .8s infinite alternate;
-}
-@keyframes boostGlow{
-  from{box-shadow:0 0 8px #ff754455}
-  to{box-shadow:0 0 24px #ff7544cc}
-}
 
 .bottom{
   position:fixed;
@@ -335,7 +326,7 @@ h2{font-size:24px;margin:5px 0 8px}
   </div>
 
   <div class="boost-box">
-    <button class="boost-btn" id="boostButton" onclick="buyBoost()">⚡ BOOST x2 — 🪙 500</button>
+    <button class="boost-btn" id="boostButton" onclick="buyBoost()">⚡ ВОССТАНОВИТЬ ЭНЕРГИЮ — 🪙 500</button>
   </div>
 </div>
 
@@ -414,8 +405,7 @@ const defaults={
   skins:{classic:true},
   skin:"classic",
   cipherChoice:["","",""],
-  cipherDone:false,
-  boostUntil:0
+  cipherDone:false
 };
 
 let data=JSON.parse(JSON.stringify(defaults));
@@ -448,10 +438,6 @@ function toast(text){
   setTimeout(()=>p.classList.remove("show"),1500);
 }
 
-function boostActive(){
-  return Date.now()<data.boostUntil;
-}
-
 function showPage(id,btn){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -461,12 +447,12 @@ function showPage(id,btn){
 }
 
 function buyBoost(){
-  if(boostActive()){
-    toast("⚡ BOOST УЖЕ АКТИВЕН!");
+  const price=500;
+
+  if(data.energy>=data.maxEnergy){
+    toast("⚡ Энергия уже полная!");
     return;
   }
-
-  const price=500;
 
   if(data.coins<price){
     toast("🪙 Нужно 500 монет!");
@@ -474,27 +460,21 @@ function buyBoost(){
   }
 
   data.coins-=price;
-  data.boostUntil=Date.now()+60000;
+  data.energy=data.maxEnergy;
+
   save();
   update();
-  toast("🔥 BOOST x2 НА 1 МИНУТУ!");
+  toast("⚡ ЭНЕРГИЯ ПОЛНОСТЬЮ ВОССТАНОВЛЕНА!");
 }
 
 function updateBoost(){
   const b=document.getElementById("boostButton");
-  if(boostActive()){
-    const seconds=Math.ceil((data.boostUntil-Date.now())/1000);
-    b.textContent="🔥 BOOST x2 — "+seconds+" сек.";
-    b.classList.add("active");
-  }else{
-    b.textContent="⚡ BOOST x2 — 🪙 500";
-    b.classList.remove("active");
-  }
+  b.textContent="⚡ ВОССТАНОВИТЬ ЭНЕРГИЮ — 🪙 500";
 }
 
 function update(){
   document.getElementById("coins").textContent=fmt(data.coins);
-  document.getElementById("tapStat").textContent="+"+fmt(data.tapPower*(boostActive()?2:1));
+  document.getElementById("tapStat").textContent="+"+fmt(data.tapPower);
   document.getElementById("upgradeStat").textContent=fmt(data.tapPrice);
   document.getElementById("hourStat").textContent=fmt(data.hour);
   document.getElementById("energyText").textContent=fmt(data.energy)+" / "+fmt(data.maxEnergy);
@@ -516,141 +496,63 @@ function update(){
 
 function hamsterSVG(skin="classic",small=false){
   const styles={
-    classic:{
-      fur1:"#ffe9b7",fur2:"#d98e49",fur3:"#87451f",
-      suit:"#285b9e",suit2:"#102a52",shirt:"#edf6ff",
-      eye:"#19110f",accessory:""
-    },
-    gold:{
-      fur1:"#fff3ae",fur2:"#e6b735",fur3:"#8f6212",
-      suit:"#d99c17",suit2:"#74440a",shirt:"#fff3a4",
-      eye:"#2a1804",
-      accessory:'<path d="M108 78 L125 48 L145 76 L160 38 L176 76 L199 47 L210 82 Z" fill="#ffd947" stroke="#9c6810" stroke-width="4"/><circle cx="160" cy="62" r="6" fill="#e64b45"/>'
-    },
-    astronaut:{
-      fur1:"#f5dfb7",fur2:"#c88c51",fur3:"#70401f",
-      suit:"#e7edf5",suit2:"#7e91aa",shirt:"#e9f7ff",
-      eye:"#101419",
-      accessory:'<path d="M75 85 Q160 25 245 85 L236 165 Q160 190 84 165Z" fill="#293b57" stroke="#b5d8f5" stroke-width="6"/><path d="M92 90 Q160 48 228 90 L221 139 Q160 162 99 139Z" fill="#75cfff" opacity=".35"/><circle cx="213" cy="108" r="8" fill="#fff" opacity=".65"/>'
-    },
-    ninja:{
-      fur1:"#d8d4cf",fur2:"#7c8089",fur3:"#363942",
-      suit:"#171b25",suit2:"#05070d",shirt:"#303642",
-      eye:"#ffdb4b",
-      accessory:'<path d="M62 112 Q160 82 258 112 L252 157 Q160 172 68 157Z" fill="#151822"/><path d="M100 126 Q123 113 145 126 L145 142 Q123 151 100 140ZM175 126 Q197 113 220 126 L220 140 Q197 151 175 142Z" fill="#ffd34e"/><path d="M235 118 Q290 105 274 139 Q254 145 238 135Z" fill="#c73737"/>'
-    },
-    ice:{
-      fur1:"#f2fbff",fur2:"#8ed8ee",fur3:"#367b9c",
-      suit:"#55c8e8",suit2:"#176b9a",shirt:"#eaffff",
-      eye:"#12334a",
-      accessory:'<path d="M91 75 L109 48 L122 76 L145 40 L158 75 L181 45 L190 78 L218 55 L211 103 L94 104Z" fill="#dffcff" stroke="#78d8f5" stroke-width="3"/>'
-    },
-    fire:{
-      fur1:"#ffd39b",fur2:"#ed7337",fur3:"#843018",
-      suit:"#8e1e25",suit2:"#3c0b12",shirt:"#ffca55",
-      eye:"#291008",
-      accessory:'<path d="M105 78 Q104 42 128 66 Q132 28 153 64 Q170 20 180 66 Q206 38 202 82Z" fill="#ff662e" stroke="#ffcf47" stroke-width="4"/>'
-    },
-    cyber:{
-      fur1:"#d7e4e9",fur2:"#718998",fur3:"#2a3742",
-      suit:"#273644",suit2:"#101920",shirt:"#62e8ff",
-      eye:"#5affee",
-      accessory:'<path d="M73 104 Q160 54 247 104 L242 130 Q160 102 78 130Z" fill="#243541" stroke="#56e9ff" stroke-width="4"/><path d="M98 122 L142 116 L142 136 L98 142ZM178 116 L222 122 L222 142 L178 136Z" fill="#4ff5ff" opacity=".8"/><path d="M160 49 V28" stroke="#58efff" stroke-width="5"/><circle cx="160" cy="22" r="7" fill="#ff5b6d"/>'
-    },
-    alien:{
-      fur1:"#c8ff9d",fur2:"#74c65d",fur3:"#2f6c38",
-      suit:"#56398c",suit2:"#24164c",shirt:"#b9ff83",
-      eye:"#18230f",
-      accessory:'<path d="M93 82 Q160 22 227 82 L220 100 Q160 70 100 100Z" fill="#8a5ed0" opacity=".8"/><path d="M160 55 V31" stroke="#93ff70" stroke-width="4"/><circle cx="160" cy="24" r="7" fill="#ff75d7"/>'
-    },
-    diamond:{
-      fur1:"#e9fbff",fur2:"#67d8f3",fur3:"#13759c",
-      suit:"#2c85bd",suit2:"#103f75",shirt:"#e8ffff",
-      eye:"#0d3b56",
-      accessory:'<path d="M105 74 L128 46 L151 76 L171 42 L190 76 L214 51 L208 102 L111 102Z" fill="#62e9ff" stroke="#e4ffff" stroke-width="3"/><path d="M145 56 L160 43 L175 56 L160 76Z" fill="#fff" opacity=".85"/>'
-    }
+    classic:{fur1:"#ffe9b7",fur2:"#d98e49",fur3:"#87451f",suit:"#285b9e",suit2:"#102a52",shirt:"#edf6ff",eye:"#19110f",accessory:""},
+    gold:{fur1:"#fff3ae",fur2:"#e6b735",fur3:"#8f6212",suit:"#d99c17",suit2:"#74440a",shirt:"#fff3a4",eye:"#2a1804",accessory:'<path d="M108 78 L125 48 L145 76 L160 38 L176 76 L199 47 L210 82 Z" fill="#ffd947" stroke="#9c6810" stroke-width="4"/><circle cx="160" cy="62" r="6" fill="#e64b45"/>'},
+    astronaut:{fur1:"#f5dfb7",fur2:"#c88c51",fur3:"#70401f",suit:"#e7edf5",suit2:"#7e91aa",shirt:"#e9f7ff",eye:"#101419",accessory:'<path d="M75 85 Q160 25 245 85 L236 165 Q160 190 84 165Z" fill="#293b57" stroke="#b5d8f5" stroke-width="6"/><path d="M92 90 Q160 48 228 90 L221 139 Q160 162 99 139Z" fill="#75cfff" opacity=".35"/><circle cx="213" cy="108" r="8" fill="#fff" opacity=".65"/>'},
+    ninja:{fur1:"#d8d4cf",fur2:"#7c8089",fur3:"#363942",suit:"#171b25",suit2:"#05070d",shirt:"#303642",eye:"#ffdb4b",accessory:'<path d="M62 112 Q160 82 258 112 L252 157 Q160 172 68 157Z" fill="#151822"/><path d="M100 126 Q123 113 145 126 L145 142 Q123 151 100 140ZM175 126 Q197 113 220 126 L220 140 Q197 151 175 142Z" fill="#ffd34e"/><path d="M235 118 Q290 105 274 139 Q254 145 238 135Z" fill="#c73737"/>'},
+    ice:{fur1:"#f2fbff",fur2:"#8ed8ee",fur3:"#367b9c",suit:"#55c8e8",suit2:"#176b9a",shirt:"#eaffff",eye:"#12334a",accessory:'<path d="M91 75 L109 48 L122 76 L145 40 L158 75 L181 45 L190 78 L218 55 L211 103 L94 104Z" fill="#dffcff" stroke="#78d8f5" stroke-width="3"/>'},
+    fire:{fur1:"#ffd39b",fur2:"#ed7337",fur3:"#843018",suit:"#8e1e25",suit2:"#3c0b12",shirt:"#ffca55",eye:"#291008",accessory:'<path d="M105 78 Q104 42 128 66 Q132 28 153 64 Q170 20 180 66 Q206 38 202 82Z" fill="#ff662e" stroke="#ffcf47" stroke-width="4"/>'},
+    cyber:{fur1:"#d7e4e9",fur2:"#718998",fur3:"#2a3742",suit:"#273644",suit2:"#101920",shirt:"#62e8ff",eye:"#5affee",accessory:'<path d="M73 104 Q160 54 247 104 L242 130 Q160 102 78 130Z" fill="#243541" stroke="#56e9ff" stroke-width="4"/><path d="M98 122 L142 116 L142 136 L98 142ZM178 116 L222 122 L222 142 L178 136Z" fill="#4ff5ff" opacity=".8"/><path d="M160 49 V28" stroke="#58efff" stroke-width="5"/><circle cx="160" cy="22" r="7" fill="#ff5b6d"/>'},
+    alien:{fur1:"#c8ff9d",fur2:"#74c65d",fur3:"#2f6c38",suit:"#56398c",suit2:"#24164c",shirt:"#b9ff83",eye:"#18230f",accessory:'<path d="M93 82 Q160 22 227 82 L220 100 Q160 70 100 100Z" fill="#8a5ed0" opacity=".8"/><path d="M160 55 V31" stroke="#93ff70" stroke-width="4"/><circle cx="160" cy="24" r="7" fill="#ff75d7"/>'},
+    diamond:{fur1:"#e9fbff",fur2:"#67d8f3",fur3:"#13759c",suit:"#2c85bd",suit2:"#103f75",shirt:"#e8ffff",eye:"#0d3b56",accessory:'<path d="M105 74 L128 46 L151 76 L171 42 L190 76 L214 51 L208 102 L111 102Z" fill="#62e9ff" stroke="#e4ffff" stroke-width="3"/><path d="M145 56 L160 43 L175 56 L160 76Z" fill="#fff" opacity=".85"/>'}
   };
 
   const s=styles[skin]||styles.classic;
 
-  return `
-  <svg viewBox="0 0 320 350" xmlns="http://www.w3.org/2000/svg">
+  return `<svg viewBox="0 0 320 350" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <radialGradient id="furA" cx="38%" cy="20%" r="80%">
-      <stop stop-color="${s.fur1}"/>
-      <stop offset=".52" stop-color="${s.fur2}"/>
-      <stop offset="1" stop-color="${s.fur3}"/>
+      <stop stop-color="${s.fur1}"/><stop offset=".52" stop-color="${s.fur2}"/><stop offset="1" stop-color="${s.fur3}"/>
     </radialGradient>
     <radialGradient id="faceA" cx="45%" cy="25%" r="80%">
-      <stop stop-color="#fff8e8"/>
-      <stop offset="1" stop-color="#d7aa81"/>
+      <stop stop-color="#fff8e8"/><stop offset="1" stop-color="#d7aa81"/>
     </radialGradient>
     <linearGradient id="suitA" x2="0" y2="1">
-      <stop stop-color="${s.suit}"/>
-      <stop offset="1" stop-color="${s.suit2}"/>
+      <stop stop-color="${s.suit}"/><stop offset="1" stop-color="${s.suit2}"/>
     </linearGradient>
-    <radialGradient id="earA">
-      <stop stop-color="#ffc5b7"/>
-      <stop offset="1" stop-color="#a85e4c"/>
-    </radialGradient>
+    <radialGradient id="earA"><stop stop-color="#ffc5b7"/><stop offset="1" stop-color="#a85e4c"/></radialGradient>
   </defs>
-
   <ellipse cx="160" cy="330" rx="110" ry="14" fill="#000" opacity=".35"/>
-
-  <path d="M67 278 Q42 221 77 185 Q111 153 160 163 Q216 150 249 190 Q278 235 254 303 Q220 340 160 332 Q96 340 67 278Z"
-  fill="url(#furA)" stroke="${s.fur3}" stroke-width="3"/>
-
-  <path d="M65 125 Q31 43 84 40 Q130 43 121 126Z"
-  fill="url(#furA)" stroke="${s.fur3}" stroke-width="4"/>
+  <path d="M67 278 Q42 221 77 185 Q111 153 160 163 Q216 150 249 190 Q278 235 254 303 Q220 340 160 332 Q96 340 67 278Z" fill="url(#furA)" stroke="${s.fur3}" stroke-width="3"/>
+  <path d="M65 125 Q31 43 84 40 Q130 43 121 126Z" fill="url(#furA)" stroke="${s.fur3}" stroke-width="4"/>
   <path d="M78 101 Q55 55 85 55 Q111 57 108 104Z" fill="url(#earA)"/>
-
-  <path d="M199 124 Q194 49 239 42 Q290 48 257 130Z"
-  fill="url(#furA)" stroke="${s.fur3}" stroke-width="4"/>
+  <path d="M199 124 Q194 49 239 42 Q290 48 257 130Z" fill="url(#furA)" stroke="${s.fur3}" stroke-width="4"/>
   <path d="M216 103 Q215 62 240 58 Q266 64 245 110Z" fill="url(#earA)"/>
-
-  <path d="M63 149 Q53 78 110 62 Q160 35 213 65 Q270 94 259 159 Q253 220 205 238 Q160 255 110 232 Q63 208 63 149Z"
-  fill="url(#furA)" stroke="${s.fur3}" stroke-width="3"/>
-
+  <path d="M63 149 Q53 78 110 62 Q160 35 213 65 Q270 94 259 159 Q253 220 205 238 Q160 255 110 232 Q63 208 63 149Z" fill="url(#furA)" stroke="${s.fur3}" stroke-width="3"/>
   <ellipse cx="104" cy="174" rx="45" ry="42" fill="url(#faceA)"/>
   <ellipse cx="217" cy="174" rx="45" ry="42" fill="url(#faceA)"/>
   <ellipse cx="160" cy="180" rx="67" ry="55" fill="url(#faceA)"/>
-
   ${s.accessory}
-
   <ellipse cx="123" cy="142" rx="14" ry="18" fill="${s.eye}"/>
   <ellipse cx="198" cy="142" rx="14" ry="18" fill="${s.eye}"/>
   <ellipse cx="127" cy="136" rx="5" ry="6" fill="#fff"/>
   <ellipse cx="202" cy="136" rx="5" ry="6" fill="#fff"/>
-
-  <path d="M107 120q15-12 31-2 M183 118q17-12 31 1"
-  stroke="${s.fur3}" stroke-width="5" fill="none" stroke-linecap="round"/>
-
+  <path d="M107 120q15-12 31-2 M183 118q17-12 31 1" stroke="${s.fur3}" stroke-width="5" fill="none" stroke-linecap="round"/>
   <path d="M147 172 Q160 158 174 172 Q172 185 160 186 Q148 185 147 172Z" fill="#c87b82"/>
-  <path d="M160 186v10 M160 196q-13 12-23 0 M160 196q13 12 23 0"
-  stroke="#70463f" stroke-width="3" fill="none" stroke-linecap="round"/>
-
+  <path d="M160 186v10 M160 196q-13 12-23 0 M160 196q13 12 23 0" stroke="#70463f" stroke-width="3" fill="none" stroke-linecap="round"/>
   <ellipse cx="98" cy="187" rx="18" ry="10" fill="#ed8b83" opacity=".38"/>
   <ellipse cx="222" cy="187" rx="18" ry="10" fill="#ed8b83" opacity=".38"/>
-
-  <path d="M70 243 Q99 214 130 219 L160 249 L190 219 Q229 214 252 243 L274 350 H46Z"
-  fill="url(#suitA)" stroke="${s.suit2}" stroke-width="4"/>
-
-  <path d="M130 219 L160 249 L190 219 L178 350 H142Z"
-  fill="${s.shirt}" stroke="#d7e3f3" stroke-width="2"/>
-
-  <path d="M145 256 L160 268 L175 256 L168 293 L160 303 L152 293Z"
-  fill="#d94c4c"/>
-
+  <path d="M70 243 Q99 214 130 219 L160 249 L190 219 Q229 214 252 243 L274 350 H46Z" fill="url(#suitA)" stroke="${s.suit2}" stroke-width="4"/>
+  <path d="M130 219 L160 249 L190 219 L178 350 H142Z" fill="${s.shirt}" stroke="#d7e3f3" stroke-width="2"/>
+  <path d="M145 256 L160 268 L175 256 L168 293 L160 303 L152 293Z" fill="#d94c4c"/>
   <ellipse cx="92" cy="311" rx="25" ry="17" fill="#e9bd94" stroke="${s.fur3}" stroke-width="2"/>
   <ellipse cx="228" cy="311" rx="25" ry="17" fill="#e9bd94" stroke="${s.fur3}" stroke-width="2"/>
-
   <ellipse cx="105" cy="92" rx="18" ry="10" fill="#fff" opacity=".16"/>
   </svg>`;
 }
 
 function renderHamster(){
-  const h=document.getElementById("hamster");
-  h.innerHTML=hamsterSVG(data.skin);
+  document.getElementById("hamster").innerHTML=hamsterSVG(data.skin);
 }
 
 function tap(e){
@@ -660,8 +562,7 @@ function tap(e){
   }
 
   data.energy--;
-
-  const power=data.tapPower*(boostActive()?2:1);
+  const power=data.tapPower;
   data.coins+=power;
   data.taps++;
 
@@ -724,19 +625,7 @@ function renderMine(){
     const price=m.price();
     const el=document.createElement("div");
     el.className="card";
-    el.innerHTML=`
-      <div class="card-head">
-        <div class="card-art">${m.icon}</div>
-        <div class="card-info">
-          <h3>${m.name}</h3>
-          <p>${m.desc}</p>
-          <p>Уровень: ${m.level()}</p>
-        </div>
-      </div>
-      <div class="card-bottom">
-        <span class="price">🪙 ${fmt(price)}</span>
-        <button class="action" ${data.coins<price?"disabled":""}>УЛУЧШИТЬ</button>
-      </div>`;
+    el.innerHTML=`<div class="card-head"><div class="card-art">${m.icon}</div><div class="card-info"><h3>${m.name}</h3><p>${m.desc}</p><p>Уровень: ${m.level()}</p></div></div><div class="card-bottom"><span class="price">🪙 ${fmt(price)}</span><button class="action" ${data.coins<price?"disabled":""}>УЛУЧШИТЬ</button></div>`;
     el.querySelector("button").onclick=m.buy;
     box.appendChild(el);
   });
@@ -758,27 +647,12 @@ const spaceItems=[
 function renderSpace(){
   const box=document.getElementById("universeCards");
   box.innerHTML="";
-
   spaceItems.forEach(x=>{
     const [id,icon,name,desc,price,income]=x;
     const owned=!!data.space[id];
-
     const el=document.createElement("div");
     el.className="card";
-    el.innerHTML=`
-      <div class="card-head">
-        <div class="card-art">${icon}</div>
-        <div class="card-info">
-          <h3>${name}</h3>
-          <p>${desc}</p>
-          <p>Прибыль: +${fmt(income)} / час</p>
-        </div>
-      </div>
-      <div class="card-bottom">
-        <span class="price">${owned?"✅ КУПЛЕНО":"🪙 "+fmt(price)}</span>
-        <button class="action" ${owned||data.coins<price?"disabled":""}>${owned?"КУПЛЕНО":"КУПИТЬ"}</button>
-      </div>`;
-
+    el.innerHTML=`<div class="card-head"><div class="card-art">${icon}</div><div class="card-info"><h3>${name}</h3><p>${desc}</p><p>Прибыль: +${fmt(income)} / час</p></div></div><div class="card-bottom"><span class="price">${owned?"✅ КУПЛЕНО":"🪙 "+fmt(price)}</span><button class="action" ${owned||data.coins<price?"disabled":""}>${owned?"КУПЛЕНО":"КУПИТЬ"}</button></div>`;
     el.querySelector("button").onclick=()=>{
       if(owned||data.coins<price)return;
       data.coins-=price;
@@ -786,7 +660,6 @@ function renderSpace(){
       data.hour+=income;
       save();update();toast(icon+" Покупка совершена!");
     };
-
     box.appendChild(el);
   });
 }
@@ -806,29 +679,12 @@ const skinItems=[
 function renderSkins(){
   const box=document.getElementById("skinCards");
   box.innerHTML="";
-
   skinItems.forEach(s=>{
     const owned=s.price===0||!!data.skins[s.id];
     const selected=data.skin===s.id;
-
     const el=document.createElement("div");
     el.className="card"+(selected?" skin-selected":"");
-
-    el.innerHTML=`
-      <div class="card-head">
-        <div class="skin-preview">${hamsterSVG(s.id,true)}</div>
-        <div class="card-info">
-          <h3 class="${selected?"skin-name-selected":""}">${s.name} ${selected?"✓":""}</h3>
-          <p>${s.desc}</p>
-        </div>
-      </div>
-      <div class="card-bottom">
-        <span class="price">${owned?"✅ ОТКРЫТ":"🪙 "+fmt(s.price)}</span>
-        <button class="action" ${selected||(!owned&&data.coins<s.price)?"disabled":""}>
-          ${selected?"ВЫБРАН":owned?"ВЫБРАТЬ":"КУПИТЬ"}
-        </button>
-      </div>`;
-
+    el.innerHTML=`<div class="card-head"><div class="skin-preview">${hamsterSVG(s.id,true)}</div><div class="card-info"><h3 class="${selected?"skin-name-selected":""}">${s.name} ${selected?"✓":""}</h3><p>${s.desc}</p></div></div><div class="card-bottom"><span class="price">${owned?"✅ ОТКРЫТ":"🪙 "+fmt(s.price)}</span><button class="action" ${selected||(!owned&&data.coins<s.price)?"disabled":""}>${selected?"ВЫБРАН":owned?"ВЫБРАТЬ":"КУПИТЬ"}</button></div>`;
     el.querySelector("button").onclick=()=>{
       if(!owned){
         if(data.coins<s.price)return toast("Не хватает монет!");
@@ -838,12 +694,9 @@ function renderSkins(){
       }else{
         toast("🎨 Скин выбран!");
       }
-
       data.skin=s.id;
-      save();
-      update();
+      save();update();
     };
-
     box.appendChild(el);
   });
 }
@@ -854,21 +707,17 @@ const secretCipher=["🐹","🚀","💎"];
 function renderCipher(){
   const row=document.getElementById("cipherRow");
   row.innerHTML="";
-
   for(let i=0;i<3;i++){
     const card=document.createElement("div");
     card.className="cipher-card";
     card.textContent=data.cipherChoice[i]||"?";
-
     card.onclick=()=>{
       if(data.cipherDone)return;
       const current=data.cipherChoice[i];
       const index=cipherSymbols.indexOf(current);
       data.cipherChoice[i]=cipherSymbols[(index+1+cipherSymbols.length)%cipherSymbols.length];
-      save();
-      renderCipher();
+      save();renderCipher();
     };
-
     row.appendChild(card);
   }
 
@@ -888,7 +737,6 @@ function renderCipher(){
 
 function checkCipher(){
   if(data.cipherDone)return;
-
   if(data.cipherChoice.some(x=>!x)){
     toast("🔐 Выбери все карточки!");
     return;
@@ -903,8 +751,7 @@ function checkCipher(){
     toast("🎉 ШИФР РАЗГАДАН! +1000 🪙");
   }else{
     data.cipherChoice=["","",""];
-    save();
-    renderCipher();
+    save();renderCipher();
     toast("❌ Неверный шифр!");
   }
 }
@@ -925,12 +772,8 @@ setInterval(()=>{
   if(changed){
     save();
     update();
-  }else{
-    updateBoost();
   }
 },5000);
-
-setInterval(updateBoost,1000);
 
 update();
 </script>
